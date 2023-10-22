@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AxiosProvider } from './Contexts/AxiosContext'
+import { AxiosProvider } from './Contexts/Slices/AxiosContext'
 import ProvidersContainer from './Components/ProvidersContainer'
 
 const inter = Inter({ subsets: ['latin'] })

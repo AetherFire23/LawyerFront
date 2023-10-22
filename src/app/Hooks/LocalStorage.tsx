@@ -8,7 +8,7 @@ export interface GetSetLocalValue {
 }
 
 export function useLocalStorage(): GetSetLocalValue | null {
-  
+
 
 
   const getLocalValue: <T>(key: StorageTypes) => T = <T,>(key: StorageTypes) => {
@@ -26,7 +26,13 @@ export function useLocalStorage(): GetSetLocalValue | null {
   const getSet: GetSetLocalValue = {
     getLocalValue: getLocalValue,
     setLocalValue: setLocalValue,
-  } 
+  }
 
   return getSet
+}
+
+export function useApiKey(): string {
+  const { getLocalValue, setLocalValue } = useLocalStorage() as GetSetLocalValue
+  const apiKey: string = getLocalValue(StorageTypes.jwtToken)
+  return apiKey
 }

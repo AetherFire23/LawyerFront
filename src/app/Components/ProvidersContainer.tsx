@@ -1,7 +1,7 @@
 'use client'
 import { ReactNode } from "react";
 import { AuthenticationProvider } from "../Contexts/AuthenticationContext";
-import { AxiosProvider } from "../Contexts/AxiosContext";
+import { AxiosProvider } from "../Contexts/Slices/AxiosContext";
 
 interface IProps {
     children: ReactNode
