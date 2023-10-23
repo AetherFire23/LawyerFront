@@ -9,7 +9,7 @@ enum AuthenticationActionTypes {
 }
 
 export class AuthenticationPayload {
-    public actionType: AuthenticationActionTypes | null = null;
+    public actionType: AuthenticationActionTypes;
     public payload: any
 }
 
@@ -44,7 +44,10 @@ export function AuthenticationProvider({ children }: IProps) {
 
 export function authenticationReducer(axios: CasesContext | null, payload: AuthenticationPayload) {
 
-    return;
+    // switch (payload.actionType) {
+    //     }
+    // }
+    // return;
 }
 
 

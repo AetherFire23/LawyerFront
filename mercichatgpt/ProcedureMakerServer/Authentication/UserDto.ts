@@ -3,12 +3,11 @@
 //     the code is regenerated.
 
 import { EntityBase } from '../../EFCoreBase/Entities/EntityBase';
-import { Lawyer } from '../Entities/Lawyer';
 import { RoleTypes } from './RoleTypes';
 
 export class UserDto extends EntityBase
 {
 	public name: string;
-	public lawyer: Lawyer;
+	public lawyerId: string;
 	public roles: RoleTypes[];
 }
