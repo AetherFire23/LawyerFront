@@ -1,20 +1,19 @@
 'use client'
 import { ReactComponentElement, ReactNode, createContext, useContext, Dispatch } from "react";
 import { useImmerReducer } from "use-immer";
-import { CasesContext } from "../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext";
+import { CasesContext as UserDto } from "../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext";
 
-enum AuthenticationActionTypes {
-    changeBase,
-    replaceAxios
+export enum AuthenticationActionTypes {
+    overwriteDto,
 }
 
-export class AuthenticationPayload {
-    public actionType: AuthenticationActionTypes;
-    public payload: any
+export interface AuthenticationPayload {
+    actionType: AuthenticationActionTypes;
+    info: any
 }
 
-const authenticationData: CasesContext | null = null;
-const AuthenticationContext = createContext<CasesContext | null>(authenticationData);
+const authenticationData: UserDto | null = null;
+const AuthenticationContext = createContext<UserDto | null>(authenticationData);
 export function useAuthenticationContext() {
     return useContext(AuthenticationContext);
 }
@@ -42,12 +41,15 @@ export function AuthenticationProvider({ children }: IProps) {
     )
 }
 
-export function authenticationReducer(axios: CasesContext | null, payload: AuthenticationPayload) {
-
-    // switch (payload.actionType) {
-    //     }
-    // }
-    // return;
+export function authenticationReducer(userDto: UserDto | null, payload: AuthenticationPayload) {
+    switch (payload.actionType) {
+        case AuthenticationActionTypes.overwriteDto:{
+            const userdto = payload.info as UserDto
+            userDto = {
+                ...userdto
+            }
+        }
+    }
 }
 
 
