@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { AxiosProvider } from './Contexts/Slices/AxiosContext'
 import ProvidersContainer from './Components/ProvidersContainer'
+import { useState } from 'react'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark">
       <body>
         <ProvidersContainer>
           {children}

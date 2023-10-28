@@ -17,6 +17,7 @@ export abstract class PersonBase extends EntityBase
 	public workPhoneNumber: string;
 	public homePhoneNumber: string;
 	public hasJuridicalAid: boolean;
+	public postalCase: string;
 	public dateOfBirth: Date;
 	public socialSecurityNumber: string;
 }

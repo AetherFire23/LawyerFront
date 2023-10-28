@@ -24,9 +24,14 @@ import useFallbackText from './Hooks/useFallbackText';
 import useHiddenCss from './Hooks/useFallbackValue';
 import useHiddenElement from './Hooks/useHiddenElement';
 import axios from "axios"
+import { CasesActionData, CasesActionTypes, useCasesDispatch } from './Contexts/CaseContext';
+import { UserEndpoints } from '../../mercichatgpt/ProcedureMakerServer/Constants/UserEndpoints';
 export default function Home() {
+
   const axiosFetcher = useAxiosContext()
   const authDispatch = useAuthenticationDispatch()
+  const casesDispatch = useCasesDispatch()
+
   const { token, setToken } = useTokenStorage()
   const { loginWithCredentialsRequest, tokenLoginRequest: loginWithToken } = useUserRequests()
   const router = useRouter()
@@ -40,7 +45,6 @@ export default function Home() {
   const [isRegistering, setIsRegistering] = useState(false)
   const registerButtonText = useFallbackText(!isRegistering, "Register", "Back")
   const hideOnRegistering = useHiddenElement(!isRegistering)
-
 
   const [hasRegisterError, setHasRegisterError] = useState(false)
   const [hasPressedConfirmButton, setHasPressedConfirmButton] = useState(false)
@@ -60,22 +64,44 @@ export default function Home() {
 
   const hasFoundTokenKey: boolean = (token != null) && token.length > 15
   console.log(`was a key found?=${hasFoundTokenKey} value=${token}`)
-  // probably a better way to ensure mounting only once but yee
 
   console.log(`am I null ? ${axiosFetcher}---`)
   if (hasFoundTokenKey) {
     console.log("am i even")
     loginWithToken()
-      .then((res) => {
+      .then(async (res) => {
         console.log("successful token login")
+
+        await updateContextsFromLoginResult(res.data as LoginResult)
         router.push("/homePage")
       })
       .catch((err) => {
         console.log("Unsuccessful token login.")
       })
-  } // Move this brace to the correct position
+  }
 
+  const updateContextsFromLoginResult = async (loginResult: LoginResult) => {
+    // updateUserDto
+    const authPayload: AuthenticationPayload = {
+      actionType: AuthenticationActionTypes.overwriteDto,
+      info: loginResult.userDto
+    }
+    authDispatch?.(authPayload)
 
+    // get caseContext to save it inside the react Context
+    const updatedCases = await fetchCaseContext(loginResult.userDto.lawyerId)
+    casesDispatch?.({actionType: CasesActionTypes.overWriteCases, info: updatedCases})
+  }
+
+  const fetchCaseContext = async (lawyerId: string) => {
+    let caseContext: CasesContext;
+
+    await axios.get(`/Case/getcases/lawyerId=${lawyerId}`)
+      .then(res => {
+        caseContext = res.data as CasesContext
+      })
+      .catch(console.log)
+  }
 
   const loginWithCredentialsExecute = async () => {
     console.log("begin logging")
@@ -84,14 +110,11 @@ export default function Home() {
       username: userName
     }
     await loginWithCredentialsRequest(loginInfo)
-      .then(res => {
+      .then(async res => {
         console.log("valid!")
         const loginResult = res.data as LoginResult
-        const authPayload: AuthenticationPayload = {
-          actionType: AuthenticationActionTypes.overwriteDto,
-          info: loginResult.userDto
-        }
-        authDispatch?.(authPayload)
+        await updateContextsFromLoginResult(loginResult)
+
         setToken(loginResult.token)
         router.push("/homePage")
 
@@ -100,7 +123,7 @@ export default function Home() {
         console.log("invalid credentials")
         setHasLoginError(true)
       })
-    console.log("endinglogging")
+    console.log("ending logging")
   }
 
   const tryRegister = async () => {
@@ -124,22 +147,21 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center mt-32">
-      <input placeholder={"username"} className='bg-slate-600 mb-5' value={userName} onChange={handleValueChange} />
-      <input placeholder={"password"} className='bg-slate-600 mb-5' value={password} onChange={passwordChange} />
+      <input placeholder={"username"} className='bg-slate-600 mb-5 input' value={userName} onChange={handleValueChange} />
+      <input placeholder={"password"} className='bg-slate-600 mb-5 input' value={password} onChange={passwordChange} />
 
       {isRegistering ? (
-        <input placeholder={"email"} className='bg-slate-600 mb-5' value={email} onChange={emailChange} />
+        <input placeholder={"email"} className='bg-slate-600 mb-5 input' value={email} onChange={emailChange} />
       ) : (
         <div>
-          <button onClick={(e) => loginWithCredentialsExecute()}> Login</button>
+          <button onClick={(e) => loginWithCredentialsExecute()} className='btn'> Login</button>
         </div>
       )}
-      <button onClick={(e) => { swapRegisterOrBackButton() }}> {registerButtonText} </button>
+      <button onClick={(e) => { swapRegisterOrBackButton() }} className='btn' > {registerButtonText} </button>
 
-      <button className={`${hideOnRegistering}`} onClick={(e) => tryRegister()}> Confirm</button>
+      <button className={`${hideOnRegistering} btn`} onClick={(e) => tryRegister()}> Confirm</button>
       <label className={`${showOnLoginError}`} > Error in credentials login </label>
       <label className={`${showOnConfirmClick}`} > {errorOrSuccessText} </label>
-
     </div>
   )
 }

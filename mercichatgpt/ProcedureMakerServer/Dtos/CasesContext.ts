@@ -2,11 +2,14 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
+import { Lawyer } from '../Entities/Lawyer';
 import { CaseDto } from './CaseDto';
 import { Client } from '../Entities/Client';
 
 export class CasesContext
 {
+	public lawyer: Lawyer;
 	public cases: CaseDto[];
+	public name: string;
 	public clients: Client[];
 }

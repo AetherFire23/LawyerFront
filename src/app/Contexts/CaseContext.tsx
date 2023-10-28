@@ -4,14 +4,13 @@ import { useImmerReducer } from "use-immer";
 import { CasesContext } from "../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext";
 // use client hehhiih
 
-enum CasesActionTypes {
-    changeBase,
-    replaceAxios
+export enum CasesActionTypes {
+    overWriteCases,
 }
 
 export class CasesActionData {
     public actionType: CasesActionTypes
-    public payload: any
+    public info: any
 }
 
 const casesData: CasesContext | null = null;
@@ -43,24 +42,28 @@ export function CasesProvider({ children }: IProps) {
     )
 }
 
+// const actionDispatcher: Record<CasesActionTypes, (data: CasesContext | null) => void> = {
+//     [CasesActionTypes.changeBase]: updateContext,
+// }
 
-const actionDispatcher: Record<CasesActionTypes, (data: CasesContext | null) => void> = {
-    [CasesActionTypes.changeBase]: myAction1,
-    [CasesActionTypes.replaceAxios]: myAction2,
-}
+export function casesReducer(casesContext: CasesContext | null, payload: CasesActionData) {
+    // const action: (data: CasesContext | null) => void = actionDispatcher[payload.actionType]
+    // action(userDto)
 
-export function casesReducer(userDto: CasesContext | null, payload: CasesActionData) {
-    const action: (data: CasesContext | null) => void = actionDispatcher[payload.actionType]
-    action(userDto)
+    switch (payload.actionType) {
+        case CasesActionTypes.overWriteCases: {
+            casesContext = {
+                ...payload.info
+            }
+        }
+    }
+
     return;
 }
 
-function myAction1(user: CasesContext | null) {
-    console.log("myaction1")
-    return;
-}
+// function updateContext(casesContext: CasesContext | null) {
+//     console.log("myaction1")
 
-function myAction2(user: CasesContext | null) {
-    console.log("myaction1")
-    return;
-}
+
+//     return;
+// }

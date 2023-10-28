@@ -16,8 +16,8 @@ export function useLocalStorage(): GetSetLocalValue | null {
   const getLocalValue: <T>(key: StorageTypes) => T = <T,>(key: StorageTypes) => {
 
     const storedValue = window.localStorage.getItem(key.toString())
-    const storedValueAsNonNullable:string = storedValue ?? ""
-    const parsedStoredValue = JSON.parse(storedValueAsNonNullable) 
+    const storedValueAsNonNullable: string = storedValue ?? ""
+    const parsedStoredValue = JSON.parse(storedValueAsNonNullable)
     console.log(`convertedValue :${parsedStoredValue}`)
     return parsedStoredValue;
   }
@@ -67,3 +67,15 @@ export function useTokenStorage(): GetSetKey {
   }
   return getSetKey
 }
+
+
+export function useApplyTheme() {
+  
+}
+
+const applyTheme = (theme: string = "default") => {
+  let newTheme = theme;
+  const html = document.getElementsByTagName("html")[0];
+  localStorage.setItem("theme", theme);
+  (html as any).setAttribute("data-theme", newTheme);
+};
