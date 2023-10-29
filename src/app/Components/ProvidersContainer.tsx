@@ -1,7 +1,8 @@
 'use client'
 import { ReactNode } from "react";
-import { AuthenticationProvider } from "../Contexts/AuthenticationContext";
-import { AxiosProvider } from "../Contexts/Slices/AxiosContext";
+import { AuthenticationProvider } from "../Contexts/AuthenticationSlice/AuthenticationContext";
+import { AxiosProvider } from "../Contexts/AxiosSlice/AxiosContext";
+import { CasesProvider } from "../Contexts/CaseSlice/CaseContext";
 
 interface IProps {
     children: ReactNode
@@ -11,12 +12,11 @@ export default function ProvidersContainer({ children }: IProps) {
     return (
         <div>
             <AuthenticationProvider>
-                <AxiosProvider>
-                    <AuthenticationProvider>
+                <CasesProvider>
+                    <AxiosProvider>
                         {children}
-
-                    </AuthenticationProvider>
-                </AxiosProvider>
+                    </AxiosProvider>
+                </CasesProvider>
             </AuthenticationProvider>
         </div>
     )

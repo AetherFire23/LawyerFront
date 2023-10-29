@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { AxiosProvider } from './Contexts/Slices/AxiosContext'
+import { AxiosProvider } from './Contexts/AxiosSlice/AxiosContext'
 import ProvidersContainer from './Components/ProvidersContainer'
 import { useState } from 'react'
 
