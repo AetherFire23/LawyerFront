@@ -4,7 +4,7 @@ import './globals.css'
 import { AxiosProvider } from './Contexts/AxiosSlice/AxiosContext'
 import ProvidersContainer from './Components/ProvidersContainer'
 import { useState } from 'react'
-
+import Providers from './Redux/Providers'
 // const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,12 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark">
       <body>
-        <ProvidersContainer>
-          {children}
-
-        </ProvidersContainer>
+        <Providers>
+          <ProvidersContainer>
+            {children}
+          </ProvidersContainer>
+        </Providers>
       </body>
-
     </html>
   )
 }

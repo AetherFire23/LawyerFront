@@ -15,52 +15,20 @@ import { getCases } from './Contexts/CaseSlice/CaseRequests';
 import { useCaseActions } from './Contexts/CaseSlice/CaseActions';
 import useAuthenticationActions from './Contexts/AuthenticationSlice/AuthenticationActions';
 import { useAxiosDispatch } from './Contexts/AxiosSlice/AxiosContext';
+
+import { userApi } from './Redux/Apis/userApi';
+import { useGetTokenQuery } from './Redux/Apis/userApi';
+import { todo } from 'node:test';
 export default function Home() {
-  const authContext = useAuthenticationContext();
-  const axiosDispatch = useAxiosDispatch
-  const authDispatch = useAuthenticationDispatch()
-
-  console.log(authContext)
-  const { refreshCases } = useCaseActions()
- // const { getThenDispatchUserDto } = useAuthenticationActions()
- console.log(authDispatch)
-
-  const casesDispatch = useCasesDispatch()
   const router = useRouter()
-  const { token, setToken } = useTokenStorage()
-  console.log(authContext)
-  //console.log(authDispatch)
-  
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<ILoginRequest>()
-  console.log(`is auth null : ${authContext === null} ${authContext}`)
+  const [triggerGetToken, result, info] = userApi.endpoints.getToken.useLazyQuery()
+
+  const {register,handleSubmit,watch,formState: { errors },} = useForm<ILoginRequest>()
 
   const onSubmit: SubmitHandler<ILoginRequest> = async (loginRequest) => {
-    // sends login, sets token in Axios, updates the stored user, fetches the current cases and navigates to next page
-
-    try {
-      console.log("Login request data:", loginRequest)
-      const loginResult = await credentialsLoginRequest(loginRequest)
-      authDispatch?.({ actionType: AuthenticationActionTypes.OverwriteDto, info: loginResult.userDto })
-      
-      console.log("Login request data:", loginResult)
-      console.log(`is auth null : ${authContext === null} ${authContext}`)
-      console.log(`${authContext}`)
-
-      // setAxiosToken(loginResult.token)
-
-
-      // console.log(authContext?.lawyerId)
-      //await refreshCases()
-      // console.log(authContext?.lawyerId)
-
-      router.push("/homePage")
-    } catch (err) {
-      console.log("Could not login", err);
+    const s = await triggerGetToken(loginRequest)
+    if (s.isError) {
+      console.log("is error !!")
     }
   };
 
@@ -69,10 +37,13 @@ export default function Home() {
       <form className="flex flex-col items-center justify-center mt-32" onSubmit={handleSubmit(onSubmit)}>
         <input placeholder='userName' className="input mb-5 input-bordered" defaultValue="" {...register("username", { required: true })} />
         <input placeholder='password' className="input mb-5 input-bordered" defaultValue="" {...register("password", { required: true })} />
-        <button type="submit"> Login </button>
+
+        <label> {result.isFetching ? "fetching" : "loaded"} </label>
+        <label> {result.isLoading ? "loading" : "loaded"} </label>
+        <button className='btn' type="submit"> Login </button>
       </form>
       <Link href={"/registerPage"}>
-        <button> Register </button>
+        <button className='btn mt-5' > Register </button>
       </Link>
     </div>
   )
