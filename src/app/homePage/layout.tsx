@@ -16,7 +16,7 @@ export default function HomeLayout({
                 <Link href={"/homePage"}>
                     <button className="btn btn-ghost normal-case text-xl">Home</button>
                 </Link>
-                <div className="dropdown dropdown-hover">
+                {/* <div className="dropdown dropdown-hover">
                     <label tabIndex={0} className="btn m-1">Personal</label>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
@@ -26,7 +26,11 @@ export default function HomeLayout({
                         </li>
                         <li><a>Item 2</a></li>
                     </ul>
-                </div>
+                </div> */}
+                <Link href={"/homePage/personalInfoPage"}>
+                <button className='btn'> PERSONAL </button>
+
+                </Link>
                 <div className="dropdown dropdown-hover">
                     <label tabIndex={0} className="btn m-1">Clients</label>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">

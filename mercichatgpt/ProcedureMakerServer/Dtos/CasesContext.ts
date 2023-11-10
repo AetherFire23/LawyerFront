@@ -4,12 +4,9 @@
 
 import { Lawyer } from '../Entities/Lawyer';
 import { CaseDto } from './CaseDto';
-import { Client } from '../Entities/Client';
 
 export class CasesContext
 {
 	public lawyer: Lawyer;
 	public cases: CaseDto[];
-	public name: string;
-	public clients: Client[];
 }

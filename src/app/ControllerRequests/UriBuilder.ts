@@ -22,7 +22,6 @@ export class UriBuilder {
     if (this.uriParameters.length > 0) {
       for (let i = 0; i < this.uriParameters.length; i++) {
         const { name, value } = this.uriParameters[i];
-
         str += `${name}=${value}`;
 
         if (i != this.uriParameters.length - 1) {
@@ -30,7 +29,6 @@ export class UriBuilder {
         }
       }
     }
-
     return str;
   }
 }

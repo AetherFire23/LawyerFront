@@ -1,15 +1,17 @@
 'use client'
 import { CaseCreationInfo } from '../../../../../mercichatgpt/ProcedureMakerServer/Models/CaseCreationInfo';
-import { useAuthenticationContext } from "@/app/Contexts/AuthenticationSlice/AuthenticationContext";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link"
-import { createNewCase } from "@/app/Contexts/CaseSlice/CaseRequests";
 import { useRouter } from 'next/navigation'
-import { GetCaseResponse } from '../../../../../mercichatgpt/ProcedureMakerServer/Models/GetCaseResponse';
-import { useSearchParams } from 'next/navigation'
+import { useAppSelector } from '@/app/Redux/hooks';
+import { useCreateCaseMutation } from '@/app/Redux/Apis/caseApi';
+
 export default function AddClientPage() {
-    const userContext = useAuthenticationContext()
+    const userState = useAppSelector(s => s.userSlice)
+    // const {} = useGetCasesQuery(userState.userDto.lawyerId)
     const router = useRouter()
+    const [triggerCreateCase, { isLoading, isError, isSuccess }] = useCreateCaseMutation()
+
     interface IFormValues {
         caseNumber: string;
         clientFirstName: string;
@@ -29,23 +31,10 @@ export default function AddClientPage() {
             caseNumber: data.caseNumber,
             clientFirstName: data.clientFirstName,
             clientLastName: data.clientLastName,
-            lawyerId: userContext?.lawyerId as string
+            lawyerId: userState.userDto.lawyerId as string
         }
+        triggerCreateCase(caseInfo)
 
-        try {
-            console.log(userContext)
-
-            const {createdId}= await createNewCase(caseInfo)
-
-
-            // navigate to findClient page
-            router.push(`/homePage/clients/findclient?search=${createdId}`)
-
-            console.log("successfully added case Info")
-            console.log(data)
-        } catch (err) {
-            console.log(`error during case creation ${err}`);
-        }
     };
 
     return (
@@ -57,10 +46,8 @@ export default function AddClientPage() {
 
                 <button className='btn' type="submit"> Confirm  </button>
             </form>
-
             <Link href={"/"}>
             </Link>
-
         </div>
     )
 }

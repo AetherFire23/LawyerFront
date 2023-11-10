@@ -70,7 +70,7 @@ export function useTokenStorage(): GetSetKey {
 
 
 export function useApplyTheme() {
-  
+
 }
 
 const applyTheme = (theme: string = "default") => {
