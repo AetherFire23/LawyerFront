@@ -8,7 +8,9 @@ import styles from './cardHover.module.css'
 
 export default function FindClient() {
     const caseSlice = useAppSelector(s => s.userSlice.userDto)
+
     const { isError, isFetching, data: caseContext } = useGetCasesQuery(caseSlice.lawyerId)
+
     return (
         <div>
             <label> find client page </label>

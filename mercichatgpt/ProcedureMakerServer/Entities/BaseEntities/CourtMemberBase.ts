@@ -7,5 +7,11 @@ import { CourtRoles } from '../../Enums/CourtRoles';
 
 export abstract class CourtMemberBase extends PersonBase
 {
+	public notificationEmail: string;
 	public courtRole: CourtRoles;
+	public isNotifiable: boolean;
+	public GetGenderedCourtRoleName() : string
+	{
+		return null;
+	}
 }

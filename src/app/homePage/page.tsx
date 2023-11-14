@@ -8,6 +8,8 @@ import { useGetCasesQuery } from '../Redux/Apis/caseApi';
 
 export default function HomePage() {
     const authContext = useAuthenticationContext()
+
+    
     // how do layouts work?
     // can I send my layout in SSR then place my buttons?
     // 

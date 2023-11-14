@@ -7,7 +7,7 @@ import { CourtRoles } from "../../../../mercichatgpt/ProcedureMakerServer/Enums/
 // Define a type for the slice state
 // Define the initial state using that type
 import { caseApi } from "../Apis/caseApi";
-const initialState: CasesContext = {} as any;
+const initialState: CasesContext = { } as any 
 
 export const caseSlice = createSlice({
   name: "cases",

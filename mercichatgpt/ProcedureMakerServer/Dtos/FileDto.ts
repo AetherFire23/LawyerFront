@@ -2,14 +2,14 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-import { CourtType } from '../Enums/CourtType';
+import { ChamberNames } from '../Enums/ChamberNames';
 import { Client } from '../Entities/Client';
 import { CourtMemberBase } from '../Entities/BaseEntities/CourtMemberBase';
 
 export class FileDto
 {
 	public caseNumber: string;
-	public courtType: CourtType;
+	public courtType: ChamberNames;
 	public currentLawyersClient: Client;
 	public courtMembers: CourtMemberBase[];
 }

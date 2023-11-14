@@ -10,6 +10,7 @@ import { Client } from '../../../../../../mercichatgpt/ProcedureMakerServer/Enti
 import { produce } from 'immer';
 import { CourtRoles } from '../../../../../../mercichatgpt/ProcedureMakerServer/Enums/CourtRoles';
 import caseSlice from '@/app/Redux/Slices/caseSlice';
+import { useState } from 'react';
 
 
 // https://www.svgrepo.com/svg/522262/save-floppy
@@ -20,7 +21,7 @@ function useCaseDto() {
     const userSelector = useAppSelector(s => s.userSlice)
 
 
-    const {data } = useGetCasesQuery(userSelector.userDto.lawyerId)
+    const { data } = useGetCasesQuery(userSelector.userDto.lawyerId)
 
     const caseDto: CaseDto = data?.cases.find(c => c.id === caseId) as CaseDto // break if not found, not supposed to happen
 
@@ -31,9 +32,7 @@ function useCaseDto() {
 
 export default function InfoPage() {
     const caseDto = useCaseDto()
-
     const [triggerSaveCase, { isError, isSuccess, isLoading }] = useSaveCaseMutation()
-
     const { register, handleSubmit, watch, formState: { errors }, control } = useForm<CaseDto>({
         defaultValues: caseDto
     })
@@ -41,12 +40,10 @@ export default function InfoPage() {
     const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
         control, // control props comes from useForm (optional: if you are using FormContext)
         name: 'participants', // unique name for your Field Array
-        
     });
 
-
     const onSubmit: SubmitHandler<CaseDto> = async (caseDtoFormData) => {
-        const nextCaseState = produce(caseDto, caseDraft => {
+        const nextCaseState = produce(caseDto, caseDraft => { // me souviens pus pk mais faut jutilise immer icitte 
             caseDraft.client.firstName = caseDtoFormData.client.firstName
             caseDraft.courtAffairNumber = caseDtoFormData.courtAffairNumber
             caseDraft.participants = caseDtoFormData.participants
@@ -54,15 +51,14 @@ export default function InfoPage() {
 
         console.log(caseDtoFormData as CaseDto)
         triggerSaveCase(nextCaseState)
-       
-
+        
         console.log('this is the formdata object:')
         console.log(caseDtoFormData)
 
         console.log('this is the dto object:')
         console.log(caseDto)
-
     }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='flex flex-col items-center justify-center'>

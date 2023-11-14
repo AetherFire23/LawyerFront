@@ -3,11 +3,14 @@
 //     the code is regenerated.
 
 import { EntityBase } from '../../../EFCoreBase/Entities/EntityBase';
+import { Genders } from './Genders';
 
 export abstract class PersonBase extends EntityBase
 {
 	public firstName: string;
 	public lastName: string;
+	public lowerCaseFormattedFullName: string;
+	public uppercaseFormattedFullName: string;
 	public postalCode: string;
 	public country: string;
 	public email: string;
@@ -18,6 +21,9 @@ export abstract class PersonBase extends EntityBase
 	public homePhoneNumber: string;
 	public hasJuridicalAid: boolean;
 	public postalCase: string;
+	public fax: string;
+	public gender: Genders;
 	public dateOfBirth: Date;
 	public socialSecurityNumber: string;
+	public genderedName: string;
 }

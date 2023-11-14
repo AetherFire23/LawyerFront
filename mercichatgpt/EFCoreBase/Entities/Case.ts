@@ -6,18 +6,19 @@ import { EntityBase } from './EntityBase';
 import { Lawyer } from '../../ProcedureMakerServer/Entities/Lawyer';
 import { Client } from '../../ProcedureMakerServer/Entities/Client';
 import { CasePart } from '../../ProcedureMakerServer/Entities/CasePart';
-import { CourtType } from '../../ProcedureMakerServer/Enums/CourtType';
+import { ChamberNames } from '../../ProcedureMakerServer/Enums/ChamberNames';
 
 export class Case extends EntityBase
 {
 	public managerLawyerId: string;
-	public managerLawyer: Lawyer;
+	public managerLawyer?: Lawyer;
 	public clientId: string;
 	public client: Client;
 	public participants: CasePart[];
+	public accountStatement: any;
 	public districtName: string;
 	public courtAffairNumber: string;
 	public caseNumber: string;
-	public courtType: CourtType;
+	public courtType: ChamberNames;
 	public courtNumber: number;
 }

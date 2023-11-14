@@ -6,16 +6,30 @@ import { EntityBase } from '../../EFCoreBase/Entities/EntityBase';
 import { Lawyer } from '../Entities/Lawyer';
 import { Client } from '../Entities/Client';
 import { CasePart } from '../Entities/CasePart';
-import { CourtType } from '../Enums/CourtType';
+import { CourtMemberBase } from '../Entities/BaseEntities/CourtMemberBase';
+import { ChamberNames } from '../Enums/ChamberNames';
+import { CourtTypes } from '../Enums/CourtTypes';
 
 export class CaseDto extends EntityBase
 {
 	public managerLawyer: Lawyer;
 	public client: Client;
 	public participants: CasePart[];
+	public plaintiff: CourtMemberBase;
+	public defender: CourtMemberBase;
+	public notifiableMembers: CasePart[];
 	public districtName: string;
 	public courtAffairNumber: string;
 	public caseNumber: string;
-	public courtType: CourtType;
+	public chamberName: ChamberNames;
+	public courtTypes: CourtTypes;
 	public courtNumber: number;
+	public GetFormattedCaseNames() : string
+	{
+		return null;
+	}
+	public GetPlaintiffAndDefender() : [CourtMemberBase,CourtMemberBase]
+	{
+		return null;
+	}
 }

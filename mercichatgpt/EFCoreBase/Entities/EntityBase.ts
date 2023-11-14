@@ -5,4 +5,16 @@
 export abstract class EntityBase
 {
 	public id: string;
+	public Equals(obj?: any) : boolean
+	{
+		return null;
+	}
+	public Equals(other?: any) : boolean
+	{
+		return null;
+	}
+	public GetHashCode() : number
+	{
+		return null;
+	}
 }
