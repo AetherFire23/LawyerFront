@@ -8,6 +8,11 @@ import { useState } from 'react';
 import { useAppDispatch } from './Redux/hooks';
 import { setUser } from './Redux/Slices/userSlice';
 import { LoginResult } from '../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import { Box, Input, Container, TextField, Typography } from '@mui/material';
+
+
 
 export default function Home() {
   const router = useRouter()
@@ -25,18 +30,35 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center mt-32">
-      <form className="flex flex-col items-center justify-center mt-32" onSubmit={handleSubmit(onSubmit)}>
-        <input placeholder='userName' className="input mb-5 input-bordered" defaultValue="" {...register("username", { required: true })} />
-        <input placeholder='password' className="input mb-5 input-bordered" defaultValue="" {...register("password", { required: true })} />
-        <button className='btn' type="submit"> Login </button>
-      </form>
-      <Link href={"/registerPage"}>
-        <button className='btn mt-5' > Register </button>
-      </Link>
+    <>
+      <Container>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <div className="flex flex-col items-center justify-center">
 
-      <label> {isError ? "error" : ""} </label>
-      <label> {isSuccess ? "Success" : ""} </label>
-    </div>
+
+            <form className="flex flex-col items-center justify-center mt-32" onSubmit={handleSubmit(onSubmit)}>
+              <TextField id="standard-basic" label="UserName" variant="standard"  defaultValue="" {...register("username", { required: true })} />
+              <TextField id="standard-basic" label="Password" variant="standard"  defaultValue="" {...register("password", { required: true })} />
+              <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
+            </form>
+            <Link href={"/registerPage"}>
+              <Button className='btn mt-5' > Register </Button>
+            </Link>
+            <Typography sx={{ color: 'red' }} variant="h6" component="h1">
+              {isError ? "error" : ""}
+            </Typography>
+        
+            <label> {isSuccess ? "Success" : ""} </label>
+          </div>
+        </Box>
+      </Container>
+    </>
   )
 }

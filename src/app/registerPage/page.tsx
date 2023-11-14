@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { RegisterRequest } from '../../../mercichatgpt/ProcedureMakerServer/Authentication/AuthModels/RegisterRequest';
 import Link from "next/link"
 import { useRegisterMutation } from '../Redux/Apis/userApi';
+import { Box, Button, Container, TextField } from '@mui/material';
 
 export default function RegisterPage() {
     const [triggerRegister, { isLoading, isError, isSuccess }] = useRegisterMutation()
@@ -15,26 +16,29 @@ export default function RegisterPage() {
 
     const onSubmit: SubmitHandler<RegisterRequest> = async (data: RegisterRequest) => {
         triggerRegister(data)
-        
+
     };
 
     return (
-        <div className="flex flex-col items-center justify-center mt-32">
-            <form className='flex flex-col' onSubmit={handleSubmit(onSubmit)}>
-                <input placeholder='userName' className="input input-bordered mb-5" defaultValue="" {...register("username", { required: true })} />
-                <input className="input input-bordered mb-5" mb-5 placeholder='password' {...register("password", { required: true })} />
-                {(errors.username || errors.password) && <span> Both fields are required </span>}
-                <input className="btn" type="submit" />
-            </form>
-            <div className='flex flex-col items-center justify-center pt-5'>
-                <Link href={"/"}>
-                    <button id='backButton' className='btn w-24'> Back </button>
-                </Link>
-            </div>
-            <label> {isLoading ? "loading" : ""} </label>
-            <label> {isError ? "Error while registering" : ""} </label>
-            <label> {isSuccess ? "Success!" : ""} </label>
+        <Container>
+            <Box>
+                <div className="flex flex-col items-center justify-center mt-32">
+                    <form className='flex flex-col' onSubmit={handleSubmit(onSubmit)}>
+                        <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" {...register("username", { required: true })} />
+                        <TextField id="standard-basic" label="Password" variant="standard" {...register("password", { required: true })} />
+                        {(errors.username || errors.password) && <span> Both fields are required </span>}
+                        <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
+                    </form>
+                        <Link href={"/"}>
+                            <Button> Back </Button>
+                        </Link>
+                    <label> {isLoading ? "loading" : ""} </label>
+                    <label> {isError ? "Error while registering" : ""} </label>
+                    <label> {isSuccess ? "Success!" : ""} </label>
 
-        </div>
+                </div>
+            </Box>
+        </Container>
+
     )
 }

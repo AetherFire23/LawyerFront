@@ -6,6 +6,15 @@ import ProvidersContainer from './Components/ProvidersContainer'
 import { useState } from 'react'
 import Providers from './Redux/Providers'
 // const inter = Inter({ subsets: ['latin'] })
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import { Box, Container, ThemeProvider, createTheme } from '@mui/material'
+import { brown, orange } from '@mui/material/colors'
+import { palette } from '@mui/system';
+import ThemeRegistry from './MUIStuff/ThemeRegistry'
+
 
 export const metadata: Metadata = {
   title: 'LawyerApp :)',
@@ -16,14 +25,23 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" >
       <body>
-        <Providers>
-          <ProvidersContainer>
-            {children}
-          </ProvidersContainer>
-        </Providers>
+        <div>
+          {/* tjrs use /rem ou viewport pour que ca scale mieux in and out */}
+          {/* <Box sx={{ backgroundColor: 'black', width: '100vw', height: '100vh' }}>. */}
+          <ThemeRegistry>
+            <Providers>
+              <ProvidersContainer>
+                {children}
+              </ProvidersContainer>
+            </Providers>
+          </ThemeRegistry>
+          {/* </Box> */}
+        </div>
       </body>
     </html>
   )
