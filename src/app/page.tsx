@@ -49,7 +49,7 @@ export default function Home() {
               <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
             </form>
             <Link href={"/registerPage"}>
-              <Button className='btn mt-5' > Register </Button>
+              <Button  > Register </Button>
             </Link>
             <Typography sx={{ color: 'red' }} variant="h6" component="h1">
               {isError ? "error" : ""}

@@ -5,6 +5,8 @@ import Link from "next/link"
 import { useRouter } from 'next/navigation'
 import { useAppSelector } from '@/app/Redux/hooks';
 import { useCreateCaseMutation } from '@/app/Redux/Apis/caseApi';
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
 
 export default function AddClientPage() {
     const userState = useAppSelector(s => s.userSlice)
@@ -40,11 +42,10 @@ export default function AddClientPage() {
     return (
         <div className="flex flex-col items-center mt-5">
             <form className="flex flex-col items-center justify-center mt-32" onSubmit={handleSubmit(onSubmit)}>
-                <input placeholder='clientFirstName' className="input mb-5 input-bordered" defaultValue="" {...register("clientFirstName", { required: true })} />
-                <input placeholder='clientLastName' className="input mb-5 input-bordered" defaultValue="" {...register("clientLastName", { required: true })} />
-                <input placeholder='caseNumber' className="input mb-5 input-bordered" defaultValue="" {...register("caseNumber", { required: true })} />
-
-                <button className='btn' type="submit"> Confirm  </button>
+                <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" className="input mb-5 input-bordered"  {...register("clientFirstName", { required: true })} />
+                <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" className="input mb-5 input-bordered"  {...register("clientLastName", { required: true })} />
+                <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" className="input mb-5 input-bordered"  {...register("caseNumber", { required: true })} />
+                <Button className='btn' type="submit"> Confirm </Button>
             </form>
             <Link href={"/"}>
             </Link>

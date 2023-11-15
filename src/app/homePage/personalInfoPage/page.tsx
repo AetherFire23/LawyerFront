@@ -1,6 +1,6 @@
 'use client'
 
-import { SubmitHandler, useForm , Controller } from "react-hook-form"
+import { SubmitHandler, useForm, Controller } from "react-hook-form"
 import { Lawyer } from "../../../../mercichatgpt/ProcedureMakerServer/Entities/Lawyer"
 import { CasesContext } from "../../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext"
 import { useAppSelector } from "@/app/Redux/hooks"
@@ -8,9 +8,14 @@ import caseSlice from '../../Redux/Slices/caseSlice';
 import { produce } from "immer"
 import { useGetCasesQuery } from "@/app/Redux/Apis/caseApi"
 import { useSaveCaseMutation, useSaveLawyerMutation } from "@/app/Redux/Apis/caseApi"
-
+import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
 export default function PersonalInfoPage() {
-    const { register, handleSubmit, watch, formState: { errors }, control} = useForm<Lawyer>()
+    const { register, handleSubmit, watch, formState: { errors }, control } = useForm<Lawyer>()
 
     const userSlice = useAppSelector(s => s.userSlice.userDto)
     const { isError: isErrorGetCases, isFetching, data: caseContext, isSuccess: isSuccessGetCases } = useGetCasesQuery(userSlice.lawyerId)
@@ -45,23 +50,22 @@ export default function PersonalInfoPage() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center pb-5">
-            <a> Lawyer information </a>
-
-            <div className='flex'>
-                <form className='p-5 card flex flex-col items-center items justify-start bg-neutral' onSubmit={handleSubmit(onSubmit)}>
-                    <input autoComplete="nope" placeholder='first name' className="input mb-5 input-bordered" defaultValue={isSuccessGetCases ? caseContext?.lawyer.firstName : ""} {...register("address", {})} />
-                    <input autoComplete="nope" placeholder='last name' className="input mb-5 input-bordered" defaultValue={isSuccessGetCases ? caseContext.lawyer.lastName : ''} {...register("firstName", {})} />
-                    <input autoComplete="nope" placeholder='post case' className="input mb-5 input-bordered" defaultValue="" {...register("postalCase", {})} />
-                    <input autoComplete="nope" placeholder='address' className="input mb-5 input-bordered" defaultValue="" {...register("address", {})} />
-                    <input autoComplete="nope" placeholder='mobile phone' className="input mb-5 input-bordered" defaultValue="" {...register("mobilePhoneNumber", {})} />
-
-
-                    <select> sd</select>
-
-                    <button className='btn' type="submit"> Save </button>
-                </form>
-            </div>
-        </div>
+        <Container>
+            <Box>
+                <Stack direction='column'>
+                    <Typography> Lawyer information </Typography>
+                    <Stack>
+                        <form className='p-5 card flex flex-col items-center items justify-start bg-neutral' onSubmit={handleSubmit(onSubmit)}>
+                            <TextField id="standard-basic" label="UserName" variant="standard" className="input mb-5 input-bordered" defaultValue={isSuccessGetCases ? caseContext?.lawyer.firstName : ""} {...register("address", {})} />
+                            <TextField id="standard-basic" label="UserName" variant="standard" className="input mb-5 input-bordered" defaultValue={isSuccessGetCases ? caseContext.lawyer.lastName : ''} {...register("firstName", {})} />
+                            <TextField id="standard-basic" label="UserName" variant="standard" className="input mb-5 input-bordered" defaultValue="" {...register("postalCase", {})} />
+                            <TextField id="standard-basic" label="UserName" variant="standard" className="input mb-5 input-bordered" defaultValue="" {...register("address", {})} />
+                            <TextField id="standard-basic" label="UserName" variant="standard" className="input mb-5 input-bordered" defaultValue="" {...register("mobilePhoneNumber", {})} />
+                            <Button variant="outlined" type="submit"> Save </Button>
+                        </form>
+                    </Stack>
+                </Stack>
+            </Box>
+        </Container>
     )
 }

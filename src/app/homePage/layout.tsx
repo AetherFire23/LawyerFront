@@ -1,9 +1,22 @@
-
-// maybe this can just show the buttons and navigate to the -useclient-
+'use client'
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import AdbIcon from '@mui/icons-material/Adb';
 import type { Metadata } from 'next'
-// import { Inter } from 'next/font/google'
 import Link from "next/link"
-// const inter = Inter({ subsets: ['latin'] })
+import BasicMenu from '../Controls/BasicMenu';
+import AppBarMenu from '../Controls/AppBarMenu';
 
 export default function HomeLayout({
     children,
@@ -11,67 +24,32 @@ export default function HomeLayout({
     children: React.ReactNode
 }) {
     return (
-        <div>
-            <div className="navbar bg-base-300">
-                <Link href={"/homePage"}>
-                    <button className="btn btn-ghost normal-case text-xl">Home</button>
-                </Link>
-                {/* <div className="dropdown dropdown-hover">
-                    <label tabIndex={0} className="btn m-1">Personal</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <Link href={"/homePage/personalInfoPage"}>
-                                <button>Item 1</button>
+        <Container>
+            <AppBar position='absolute'>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <Link href={"/homePage"}>
+                            <Typography variant="h6" component="div" sx={{ marginRight: '2rem' }}>
+                                LawyerApp
+                            </Typography>
+                        </Link>
+                        <Link href='/homePage/personalInfoPage'>
+                            <Button variant="outlined" sx={{ width: '6rem', marginRight: '1rem' }}>
+                                Personal
+                            </Button>
+                        </Link>
+                        <AppBarMenu buttonText='clients'>
+                            <Link href='/homePage/clients/findclient'>
+                                <MenuItem sx={{ width: '6rem' }}> Find </MenuItem>
                             </Link>
-                        </li>
-                        <li><a>Item 2</a></li>
-                    </ul>
-                </div> */}
-                <Link href={"/homePage/personalInfoPage"}>
-                <button className='btn'> PERSONAL </button>
-
-                </Link>
-                <div className="dropdown dropdown-hover">
-                    <label tabIndex={0} className="btn m-1">Clients</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <Link href={"/homePage/clients/findclient"}>
-                                <button>Search</button>
+                            <Link href='/homePage/clients/addclient'>
+                                <MenuItem> Add </MenuItem>
                             </Link>
-                        </li>
-                        <li>
-                            {/* Open the modal using document.getElementById('ID').showModal() method */}
-                            <Link href={"/homePage/clients/addclient"}>
-                                <button> Add Client </button>
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-                <div className="dropdown dropdown-hover">
-                    <label tabIndex={0} className="btn m-1">Procedure</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <Link href={"/homePage/personalInfoPage"}>
-                                <button>Find</button>
-                            </Link>
-                        </li>
-                        <li><a>Add</a></li>
-                    </ul>
-                </div>
-                <div className="dropdown dropdown-hover">
-                    <label tabIndex={0} className="btn m-1">Billing</label>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-
-                        <li>
-                            <Link href={"/homePage/personalInfoPage"}>
-                                <button>Trouver</button>
-                            </Link>
-                        </li>
-                        <li><a>Ajouter</a></li>
-                    </ul>
-                </div>
-            </div>
+                        </AppBarMenu>
+                    </Toolbar>
+                </Container>
+            </AppBar >
             {children}
-        </div>
+        </Container >
     )
 }

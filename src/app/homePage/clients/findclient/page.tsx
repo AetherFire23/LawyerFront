@@ -2,9 +2,11 @@
 import { CaseDto } from '../../../../../mercichatgpt/ProcedureMakerServer/Dtos/CaseDto';
 import { useGetCasesQuery } from '@/app/Redux/Apis/caseApi'
 import { useAppSelector } from '@/app/Redux/hooks'
-import TitleCard from '../../../Controls/TitleCard';
 import { useRouter } from 'next/navigation';
 import styles from './cardHover.module.css'
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 export default function FindClient() {
     const caseSlice = useAppSelector(s => s.userSlice.userDto)
@@ -26,16 +28,21 @@ function CaseList({ caseDtos }: ICaseListProps) {
     console.log("is case list rendering?")
     console.log(caseDtos)
     return (
-        <div className="flex flex-col items-center justify-center">
-            <label> client page</label>
-            <ul>
-                {caseDtos?.map(c => (
-                    <li key={c.client.id}>
-                        <CaseSummary caseDto={c} />
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <Container>
+            <Box>
+                <Stack direction='row' >
+                    <label> client page</label>
+                    <ul>
+                        {caseDtos?.map(c => (
+                            <li key={c.client.id}>
+                                <CaseSummary caseDto={c} />
+                            </li>
+                        ))}
+                    </ul>
+                </Stack>
+
+            </Box>
+        </Container>
     )
 }
 
@@ -52,7 +59,8 @@ function CaseSummary({ caseDto }: ICaseSummaryProps) {
     }
     return (
         <div className={styles.cardHover} onClick={navigateToClientPage}>
-            <TitleCard title={caseDto.client.firstName} subText={caseDto.caseNumber} />
+            {/* <TitleCard title={caseDto.client.firstName} subText={caseDto.caseNumber} /> */}
+            <button> test</button>
         </div>
     )
 }

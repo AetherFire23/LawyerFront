@@ -4,6 +4,7 @@ import useActiveSelection from "@/app/Hooks/useActiveSelection"
 import { useState } from "react"
 import Link from 'next/link'
 
+import Stack from '@mui/material/Stack'
 export default function ClientPageLayout({ children }: { children: React.ReactNode }) {
     // could bring that into an HOC
 
@@ -21,18 +22,19 @@ export default function ClientPageLayout({ children }: { children: React.ReactNo
     }
 
     return (
-        <div>
-            <div className="tabs ml-2.5 flex outline-slate-800">
-                <Link href={`/homePage/clients/clientpage/infopage?search=${caseId}`}>
-                    <button className={`tab tab-bordered ${getActiveTab(0)}`} onClick={e => handleSetActive(0)}>Info</button>
-                </Link>
+        <Stack>
 
-                <Link href={`/homePage/clients/clientpage/procedure?search=${caseId}`}>
-                    <button className={`tab tab-bordered ${getActiveTab(1)}`} onClick={e => handleSetActive(1)}>Procedures</button>
-                </Link>
-                <a className={`tab tab-bordered ${getActiveTab(2)}`} onClick={e => handleSetActive(2)}>Billing</a>
-            </div>
+            <Link href={`/homePage/clients/clientpage/infopage?search=${caseId}`}>
+                <button className={`tab tab-bordered ${getActiveTab(0)}`} onClick={e => handleSetActive(0)}>Info</button>
+            </Link>
+
+            <Link href={`/homePage/clients/clientpage/procedure?search=${caseId}`}>
+                <button className={`tab tab-bordered ${getActiveTab(1)}`} onClick={e => handleSetActive(1)}>Procedures</button>
+            </Link>
+            <a className={`tab tab-bordered ${getActiveTab(2)}`} onClick={e => handleSetActive(2)}>Billing</a>
+
             {children}
-        </div>
+
+        </Stack>
     )
 }
