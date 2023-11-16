@@ -4,16 +4,17 @@ import { CaseDto } from '../../../../../../mercichatgpt/ProcedureMakerServer/Dto
 import { useAppSelector } from '@/app/Redux/hooks'
 import { useGetCasesQuery, useSaveCaseMutation } from '@/app/Redux/Apis/caseApi';
 import { useForm, SubmitHandler, Controller, useFieldArray } from 'react-hook-form'
-import { CasesContext } from '../../../../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext'
-import floppy from './save-floppy.svg'
-import { Client } from '../../../../../../mercichatgpt/ProcedureMakerServer/Entities/Client';
 import { produce } from 'immer';
 import { CourtRoles } from '../../../../../../mercichatgpt/ProcedureMakerServer/Enums/CourtRoles';
-import caseSlice from '@/app/Redux/Slices/caseSlice';
-import { useState } from 'react';
-
-
+import Button from '@mui/material/Button';
+import { TextField } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select'
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 // https://www.svgrepo.com/svg/522262/save-floppy
+
 function useCaseDto() {
     const searchParams = useSearchParams()
     const caseId: string = searchParams.get("search") as string
@@ -51,7 +52,7 @@ export default function InfoPage() {
 
         console.log(caseDtoFormData as CaseDto)
         triggerSaveCase(nextCaseState)
-        
+
         console.log('this is the formdata object:')
         console.log(caseDtoFormData)
 
@@ -62,13 +63,12 @@ export default function InfoPage() {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='flex flex-col items-center justify-center'>
-                <button className='btn'> Save </button>
+                <Button type='submit'> Save </Button>
                 <div className='flex flex-row justify-center mt-12'>
                     <div className='p-5 card flex flex-col items-center items justify-start mr-64 bg-neutral'>
                         <a> Client information </a>
-                        <input placeholder='email' className="input mb-5 input-bordered" defaultValue="" {...register("client.email", {})} />
-                        <input placeholder='firstName' className="input mb-5 input-bordered" defaultValue="" {...register("client.firstName", {})} />
-
+                        <TextField id="standard-basic" label="Standard" variant="outlined" className="input mb-5 input-bordered" defaultValue="" {...register("client.email", {})} />
+                        <TextField id="standard-basic" label="Standard" variant="outlined" className="input mb-5 input-bordered" defaultValue="" {...register("client.firstName", {})} />
                         <Controller
                             name="client.courtRole"
                             control={control}
@@ -81,47 +81,42 @@ export default function InfoPage() {
                             )}
                         />
                     </div>
-
                     {/* https://react-hook-form.com/docs/usefieldarray va falloir que je dompte cette beast*/}
-
                     {/*  court info */}
                     <div className='p-5 card flex flex-col items-center items justify-start bg-neutral'>
                         <a> Court information </a>
                         <input placeholder='courtAffairNumber' className="input mb-5 input-bordered" defaultValue="" {...register("courtAffairNumber", {})} />
-
                     </div>
-
-
                 </div>
-
-
                 {/* participants */}
-                <div className='item-center justify-center flex flex-col bg-neutral p-5 card w-3/5 mt-5'>
+                <div >
                     <a> Participants </a>
                     {
                         fields.map((field, index) => {
                             return (
-                                <div key={field.id} className='flex flex-col bg-gray-600 card p-3 justify-center items-center m-3'>
-                                    <input className='input input-bordered' placeholder='firstName' type='text' {...register(`participants.${index}.firstName`)} />
-                                    <Controller
-                                        name={`participants.${index}.courtRole`}
-                                        control={control}
-                                        render={({ field }) => (
-                                            <select className='select w-full max-w-xs' {...field}>
-                                                <option value={CourtRoles.Plaintiff}> Plaintiff </option>
-                                                <option value={CourtRoles.Defender}> Defender </option>
-                                                <option value={CourtRoles.Intimated}> Intimated </option>
-                                            </select>
-                                        )}
-                                    />
-                                    <button className='btn w-1/3' type='button' onClick={e => remove(index)}> Remove  </button>
-                                </div>
+                                <Box key={field.id} sx={{ padding: '1rem' }}>
+                                    <Card sx={{ padding: '1rem' }}>
+                                        <Stack direction="row">
+                                            <TextField id="outlined-basic" label="Outlined" variant="outlined" className='input input-bordered' placeholder='firstName' type='text' {...register(`participants.${index}.firstName`)} />
+                                            <Controller
+                                                name={`participants.${index}.courtRole`}
+                                                control={control}
+                                                render={({ field }) => (
+                                                    <Select {...field} defaultValue={field.value}>
+                                                        <MenuItem value={CourtRoles.Defender}>Defender</MenuItem>
+                                                        <MenuItem value={CourtRoles.Plaintiff}>Plaintiff</MenuItem>
+                                                    </Select>
+                                                )}
+                                            />
+                                            <button className='btn w-1/3' type='button' onClick={e => remove(index)}> Remove  </button>
+                                        </Stack>
+                                    </Card>
+                                </Box>
                             )
                         })
                     }
                 </div>
                 <button className='btn' type='button' onClick={e => append({} as any)}> Add participant </button>
-
             </div>
         </form>
     );

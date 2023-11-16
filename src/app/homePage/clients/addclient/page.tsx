@@ -7,7 +7,7 @@ import { useAppSelector } from '@/app/Redux/hooks';
 import { useCreateCaseMutation } from '@/app/Redux/Apis/caseApi';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-
+import Stack from '@mui/material/Stack'
 export default function AddClientPage() {
     const userState = useAppSelector(s => s.userSlice)
     // const {} = useGetCasesQuery(userState.userDto.lawyerId)
@@ -40,7 +40,7 @@ export default function AddClientPage() {
     };
 
     return (
-        <div className="flex flex-col items-center mt-5">
+        <Stack>
             <form className="flex flex-col items-center justify-center mt-32" onSubmit={handleSubmit(onSubmit)}>
                 <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" className="input mb-5 input-bordered"  {...register("clientFirstName", { required: true })} />
                 <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" className="input mb-5 input-bordered"  {...register("clientLastName", { required: true })} />
@@ -49,6 +49,6 @@ export default function AddClientPage() {
             </form>
             <Link href={"/"}>
             </Link>
-        </div>
+        </Stack>
     )
 }

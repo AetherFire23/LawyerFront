@@ -1,17 +1,34 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
 import useActiveSelection from "@/app/Hooks/useActiveSelection"
-import { useState } from "react"
+import React, { useState } from "react"
 import Link from 'next/link'
 
 import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box';
+import BasicTabs from '@/app/Components/CustomTabPanel'
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useRouter } from 'next/navigation'
+
 export default function ClientPageLayout({ children }: { children: React.ReactNode }) {
     // could bring that into an HOC
-
+    const router = useRouter()
     const [active, setActive] = useState(0)
     const searchParams = useSearchParams()
     const caseId: string = searchParams.get("search") as string
 
+
+    const [value, setValue] = React.useState(0);
+
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+
+    function handleNavigation(path: string) {
+        router.push(path)
+    }
     function handleSetActive(index: number) {
         setActive(index)
     }
@@ -21,20 +38,27 @@ export default function ClientPageLayout({ children }: { children: React.ReactNo
         return activeText
     }
 
+    // layout is just tabs :)
     return (
         <Stack>
-
-            <Link href={`/homePage/clients/clientpage/infopage?search=${caseId}`}>
-                <button className={`tab tab-bordered ${getActiveTab(0)}`} onClick={e => handleSetActive(0)}>Info</button>
-            </Link>
-
-            <Link href={`/homePage/clients/clientpage/procedure?search=${caseId}`}>
-                <button className={`tab tab-bordered ${getActiveTab(1)}`} onClick={e => handleSetActive(1)}>Procedures</button>
-            </Link>
-            <a className={`tab tab-bordered ${getActiveTab(2)}`} onClick={e => handleSetActive(2)}>Billing</a>
-
-            {children}
-
+            <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab label="Info" {...a11yProps(0)} onClick={e => handleNavigation(`/homePage/clients//clientpage/infopage?search=${caseId}`)} />
+                        <Tab label="Procedure" {...a11yProps(1)} onClick={e => handleNavigation(`/homePage/clients/clientpage/procedure?search=${caseId}`)} />
+                        <Tab label="Billing" {...a11yProps(2)} onClick={e => handleNavigation(`/homePage/clients?search=${caseId}`)} />
+                    </Tabs>
+                </Box>
+                {children}
+            </Box>
         </Stack>
     )
+}
+
+
+function a11yProps(index: number) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
 }

@@ -18,7 +18,7 @@ export default function PersonalInfoPage() {
     const { register, handleSubmit, watch, formState: { errors }, control } = useForm<Lawyer>()
 
     const userSlice = useAppSelector(s => s.userSlice.userDto)
-    const { isError: isErrorGetCases, isFetching, data: caseContext, isSuccess: isSuccessGetCases } = useGetCasesQuery(userSlice.lawyerId)
+    const { isError: isErrorGetCases, isFetching, data: caseContext, isSuccess: isSuccessGetCases } = useGetCasesQuery()
 
     const [triggerSaveLawyer, { isLoading, isError: isErrorGetLawyer, isSuccess }] = useSaveLawyerMutation()
 

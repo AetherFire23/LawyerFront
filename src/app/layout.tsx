@@ -1,9 +1,10 @@
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { AxiosProvider } from './Contexts/AxiosSlice/AxiosContext'
 import ProvidersContainer from './Components/ProvidersContainer'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Providers from './Redux/Providers'
 // const inter = Inter({ subsets: ['latin'] })
 import '@fontsource/roboto/300.css';
@@ -14,6 +15,11 @@ import { Box, Container, ThemeProvider, createTheme } from '@mui/material'
 import { brown, orange } from '@mui/material/colors'
 import { palette } from '@mui/system';
 import ThemeRegistry from './MUIStuff/ThemeRegistry'
+import { useLoginStorage } from './Hooks/LocalStorage'
+import { useAppDispatch } from './Redux/hooks'
+import { setUser } from './Redux/Slices/userSlice'
+import { LoginResult } from '../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult'
+import { useGetCasesQuery } from './Redux/Apis/caseApi'
 
 
 export const metadata: Metadata = {

@@ -3,20 +3,30 @@
 import { CasesContext } from '../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext';
 import useAuthenticationActions from '../Contexts/AuthenticationSlice/AuthenticationActions';
 import { useAuthenticationContext } from '../Contexts/AuthenticationSlice/AuthenticationContext';
-import { useAppSelector} from '../Redux/hooks';
+import { useAppDispatch, useAppSelector } from '../Redux/hooks';
 import { useGetCasesQuery } from '../Redux/Apis/caseApi';
+import { useLoginStorage } from '../Hooks/LocalStorage';
+import { setUser } from '../Redux/Slices/userSlice';
+import { LoginResult } from '../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult';
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
-    const authContext = useAuthenticationContext()
+    // const authContext = useAuthenticationContext()
+    // const { loginResult } = useLoginStorage()
+    const dispatch = useAppDispatch()
+    useEffect(() => {
+        console.log("this is loginResult inside of homePageLayout")
+        const storedValue: string = window.localStorage.getItem("jwtToken") ?? ""
+        const storedvalues = JSON.parse(storedValue) as LoginResult
+        dispatch(setUser(storedvalues as LoginResult))
+       
+    }, []);
 
-    
-    // how do layouts work?
-    // can I send my layout in SSR then place my buttons?
-    // 
-    console.log(`is auth null in homepage: ${authContext === null} ${authContext}`)
-    console.log(authContext)
-    const caseSlice = useAppSelector(s => s.userSlice.userDto)
-    const { isError, isFetching, data: caseContext } = useGetCasesQuery(caseSlice.lawyerId)
+    const {data} = useGetCasesQuery()
+
+
+
+
     return (
         <div>
             <div>

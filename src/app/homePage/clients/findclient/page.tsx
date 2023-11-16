@@ -7,15 +7,20 @@ import styles from './cardHover.module.css'
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import useGetCasesLocal from '@/app/Hooks/useGetCasesLocal';
+
+
 
 export default function FindClient() {
     const caseSlice = useAppSelector(s => s.userSlice.userDto)
 
-    const { isError, isFetching, data: caseContext } = useGetCasesQuery(caseSlice.lawyerId)
+    useGetCasesLocal()
+    const { isError, isFetching, data: caseContext } = useGetCasesQuery()
 
     return (
         <div>
-            <label> find client page </label>
             {(!isError && !isFetching) && <CaseList caseDtos={caseContext?.cases} />}
         </div>
     )
@@ -30,8 +35,7 @@ function CaseList({ caseDtos }: ICaseListProps) {
     return (
         <Container>
             <Box>
-                <Stack direction='row' >
-                    <label> client page</label>
+                <Stack direction='row' justifyContent='center' alignContent='center' >
                     <ul>
                         {caseDtos?.map(c => (
                             <li key={c.client.id}>
@@ -40,12 +44,10 @@ function CaseList({ caseDtos }: ICaseListProps) {
                         ))}
                     </ul>
                 </Stack>
-
             </Box>
         </Container>
     )
 }
-
 
 interface ICaseSummaryProps {
     caseDto: CaseDto
@@ -58,9 +60,15 @@ function CaseSummary({ caseDto }: ICaseSummaryProps) {
         router.push(`/homePage/clients/clientpage/infopage?search=${caseDto.id}`)
     }
     return (
-        <div className={styles.cardHover} onClick={navigateToClientPage}>
+        <div onClick={navigateToClientPage}>
             {/* <TitleCard title={caseDto.client.firstName} subText={caseDto.caseNumber} /> */}
-            <button> test</button>
-        </div>
+            <Card>
+                <Box sx={{ margin: "2rem", padding: '2rem'} }>
+                    <Stack alignContent={'center'} justifyItems='center'>
+                        <Typography alignItems={'center'} justifyContent={'center'}> Test </Typography>
+                    </Stack>
+                </Box>
+            </Card>
+        </div >
     )
 }

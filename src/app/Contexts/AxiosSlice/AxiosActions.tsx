@@ -1,6 +1,6 @@
 import { ILoginRequest } from '../../../../mercichatgpt/ProcedureMakerServer/Authentication/AuthModels/ILoginRequest';
 import { useAxiosContext } from './AxiosContext';
-import { useTokenStorage } from '../../Hooks/LocalStorage';
+import { useLoginStorage } from '../../Hooks/LocalStorage';
 import { AxiosResponse } from 'axios';
 import { UserEndpoints } from '../../../../mercichatgpt/ProcedureMakerServer/Constants/UserEndpoints';
 
@@ -10,7 +10,7 @@ interface UserRequests {
 }
 
 export function useUserRequests() {
-    const { token } = useTokenStorage() 
+    const { loginResult: token } = useLoginStorage() 
     const axios = useAxiosContext() 
 
     const loginWithCredentialsRequest = (request: ILoginRequest) => {

@@ -9,7 +9,7 @@ import { RootState } from "../store";
 import userSlice from "../Slices/userSlice";
 import { CaseCreationInfo } from "../../../../mercichatgpt/ProcedureMakerServer/Models/CaseCreationInfo";
 import { CaseDto } from "../../../../mercichatgpt/ProcedureMakerServer/Dtos/CaseDto";
-import { Lawyer } from '../../../../mercichatgpt/ProcedureMakerServer/Entities/Lawyer';
+import { Lawyer } from "../../../../mercichatgpt/ProcedureMakerServer/Entities/Lawyer";
 
 export const caseApi = createApi({
   reducerPath: "caseApi",
@@ -17,9 +17,9 @@ export const caseApi = createApi({
     baseUrl: "http://localhost:5099/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).userSlice.token;
-      console.log(`curr token: ${token}`);
+      console.log(`curr token inside caseApi: ${token}`);
       if (token) {
-        headers.set("authorization", `Bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`);
       } else {
         console.log("tokens cant be null man");
       }
@@ -28,9 +28,9 @@ export const caseApi = createApi({
   tagTypes: ["Case"],
 
   endpoints: (builder) => ({
-    getCases: builder.query<CasesContext, string>({
-      query: (lawyerId) => ({
-        url: `${CasesEndpoints.getCasesContext}?lawyerId=${lawyerId}`,
+    getCases: builder.query<CasesContext, void>({
+      query: () => ({
+        url: 'case/getcasescontext',
         method: HTTPMethods.GET,
       }),
       providesTags: ["Case"],
@@ -51,7 +51,6 @@ export const caseApi = createApi({
       }),
       invalidatesTags: ["Case"],
     }),
-
     saveLawyer: builder.mutation<void, Lawyer>({
       query: (lawyer) => ({
         url: "case/modifyLawyer",
@@ -65,5 +64,9 @@ export const caseApi = createApi({
 
 // Export hooks for usage in function components, which are
 // auto-generated based on the defined endpoints
-export const { useCreateCaseMutation, useGetCasesQuery, useSaveCaseMutation, useSaveLawyerMutation } =
-  caseApi;
+export const {
+  useCreateCaseMutation,
+  useGetCasesQuery,
+  useSaveCaseMutation,
+  useSaveLawyerMutation,
+} = caseApi;

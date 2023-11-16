@@ -4,6 +4,8 @@ import { RegisterRequest } from '../../../mercichatgpt/ProcedureMakerServer/Auth
 import Link from "next/link"
 import { useRegisterMutation } from '../Redux/Apis/userApi';
 import { Box, Button, Container, TextField } from '@mui/material';
+import { CourtRoles } from '../../../mercichatgpt/ProcedureMakerServer/Enums/CourtRoles';
+import { RoleTypes } from '../../../mercichatgpt/ProcedureMakerServer/Authentication/RoleTypes';
 
 export default function RegisterPage() {
     const [triggerRegister, { isLoading, isError, isSuccess }] = useRegisterMutation()
@@ -15,6 +17,7 @@ export default function RegisterPage() {
     } = useForm<RegisterRequest>()
 
     const onSubmit: SubmitHandler<RegisterRequest> = async (data: RegisterRequest) => {
+        data.role = RoleTypes.Normal
         triggerRegister(data)
 
     };

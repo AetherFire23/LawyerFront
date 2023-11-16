@@ -11,7 +11,16 @@ import { LoginResult } from '../../mercichatgpt/ProcedureMakerServer/Authenticat
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Box, Input, Container, TextField, Typography } from '@mui/material';
+import { useLoginStorage } from './Hooks/LocalStorage';
 
+
+
+// TODO
+// auto re-log with redux
+// date objects not serializable?
+
+
+// seed client data on server startup
 
 
 export default function Home() {
@@ -19,12 +28,18 @@ export default function Home() {
   const dispatch = useAppDispatch()
   const [triggerGetToken, { isError, isSuccess }, info] = userApi.endpoints.getToken.useLazyQuery()
   const { register, handleSubmit, watch, formState: { errors }, } = useForm<ILoginRequest>()
+  const {setLoginResult } = useLoginStorage()
 
   const onSubmit: SubmitHandler<ILoginRequest> = async (loginRequest) => {
     const { isError, data: loginResult } = await triggerGetToken(loginRequest)
     if (isError) return;
 
+    const serializedValue = JSON.stringify(loginResult)
+    window.localStorage.setItem('jwtToken', serializedValue)
+    console.log(`saved serializedValue : ${serializedValue}`)
+
     dispatch(setUser(loginResult as LoginResult))
+   // setLoginResult(loginResult as LoginResult)
     router.push("/homePage")
     console.log("not error")
   }
@@ -41,11 +56,9 @@ export default function Home() {
           }}
         >
           <div className="flex flex-col items-center justify-center">
-
-
             <form className="flex flex-col items-center justify-center mt-32" onSubmit={handleSubmit(onSubmit)}>
-              <TextField id="standard-basic" label="UserName" variant="standard"  defaultValue="" {...register("username", { required: true })} />
-              <TextField id="standard-basic" label="Password" variant="standard"  defaultValue="" {...register("password", { required: true })} />
+              <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" {...register("username", { required: true })} />
+              <TextField id="standard-basic" label="Password" variant="standard" defaultValue="" {...register("password", { required: true })} />
               <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
             </form>
             <Link href={"/registerPage"}>
@@ -54,7 +67,7 @@ export default function Home() {
             <Typography sx={{ color: 'red' }} variant="h6" component="h1">
               {isError ? "error" : ""}
             </Typography>
-        
+
             <label> {isSuccess ? "Success" : ""} </label>
           </div>
         </Box>

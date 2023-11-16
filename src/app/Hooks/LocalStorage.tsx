@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
-
+import { LoginResult } from "../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult"
 
 export enum StorageTypes {
   jwtToken,
@@ -12,12 +12,14 @@ export interface GetSetLocalValue {
   setLocalValue: (key: StorageTypes, model: any) => void
 }
 
-export function useLocalStorage(): GetSetLocalValue | null {
-  const getLocalValue: <T>(key: StorageTypes) => T = <T,>(key: StorageTypes) => {
+// after initial login, save LoginResult I guess
+//  In layout of homePage, do the getcasesquery
 
-    const storedValue = window.localStorage.getItem(key.toString())
-    const storedValueAsNonNullable: string = storedValue ?? ""
-    const parsedStoredValue = JSON.parse(storedValueAsNonNullable)
+export function useLocalStorage(): GetSetLocalValue | null {
+  
+  const getLocalValue: <T>(key: StorageTypes) => T = <T,>(key: StorageTypes) => {
+    const storedValue: string = window.localStorage.getItem(key.toString()) ?? ""
+    const parsedStoredValue = JSON.parse(storedValue) as T
     console.log(`convertedValue :${parsedStoredValue}`)
     return parsedStoredValue;
   }
@@ -36,41 +38,38 @@ export function useLocalStorage(): GetSetLocalValue | null {
   return getSet
 }
 
-interface GetSetKey {
-  token: string | null
-  setToken: (c: string) => void
+interface GetSetLoginResult {
+  loginResult: LoginResult | null | undefined
+  setLoginResult: (c: LoginResult) => void
 }
-export function useTokenStorage(): GetSetKey {
+
+export function useLoginStorage(): GetSetLoginResult {
 
   const { getLocalValue, setLocalValue } = useLocalStorage() as GetSetLocalValue
-  const [token, setTokenValue] = useState<string | null>("")
+  const [token, setToken] = useState<LoginResult | null>()
 
   // have to use useffect because window nad document dont exist in the ssr - that is by default in nextjs
   // useEffect guarantees to run on client side tho,
   useEffect(() => {
     // if (window != undefined || window != null) {
-    const retrievedKey: string | null = getLocalValue(StorageTypes.jwtToken)
-    console.log(retrievedKey)
-    setTokenValue(retrievedKey)
+    const storedLogin: LoginResult | null = getLocalValue<LoginResult>(StorageTypes.jwtToken)
+    console.log(storedLogin)
+    setToken(storedLogin)
     // }
   }, [])
 
-
-  const setToken = (k: string) => {
-    const token = setLocalValue(StorageTypes.jwtToken, k)
-    return token
+  const setLoginResult = (loginResult: LoginResult) => {
+    setLocalValue(StorageTypes.jwtToken, loginResult)
+    console.log("should have set the loginResult to this:")
+    console.log(loginResult)
   }
 
-  const getSetKey: GetSetKey = {
-    token: token,
-    setToken: setToken
+  const getSetKey: GetSetLoginResult = {
+    loginResult: token,
+    setLoginResult: setLoginResult
+
   }
   return getSetKey
-}
-
-
-export function useApplyTheme() {
-
 }
 
 const applyTheme = (theme: string = "default") => {
