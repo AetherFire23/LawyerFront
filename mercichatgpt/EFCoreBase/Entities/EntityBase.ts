@@ -17,4 +17,12 @@ export abstract class EntityBase
 	{
 		return null;
 	}
+	public GenerateIdIfNull() : any
+	{
+		return null;
+	}
+	public CompareIds(other: EntityBase) : boolean
+	{
+		return null;
+	}
 }

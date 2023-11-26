@@ -12,7 +12,6 @@ export class Lawyer extends CourtMemberBase
 	public userId: string;
 	public user: User;
 	public courtLockerNumber: string;
-	public lawyerBillingOptions: any;
 	public cases: Case[];
 	public clients: Client[];
 }
