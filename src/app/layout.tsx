@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import ProvidersContainer from './Components/ProvidersContainer'
 import Providers from './Redux/Providers'
 import ThemeRegistry from './MUIStuff/ThemeRegistry'
+import { SessionProvider } from 'next-auth/react'
 
 export const metadata: Metadata = {
   title: 'LawyerApp :)',
@@ -14,7 +15,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-
   return (
     <html lang="en" >
       <body>
@@ -22,15 +22,15 @@ export default function RootLayout({
           {/* tjrs use /rem ou viewport pour que ca scale mieux in and out */}
           {/* <Box sx={{ backgroundColor: 'black', width: '100vw', height: '100vh' }}>. */}
 
-            <ThemeRegistry>
-              <Providers>
-                <ProvidersContainer>
-                  {children}
-                </ProvidersContainer>
-              </Providers>
-            </ThemeRegistry>
-            {/* </Box> */}
-    
+          <ThemeRegistry>
+            <Providers>
+              <ProvidersContainer>
+                {children}
+              </ProvidersContainer>
+            </Providers>
+          </ThemeRegistry>
+          {/* </Box> */}
+
         </div>
       </body>
     </html>

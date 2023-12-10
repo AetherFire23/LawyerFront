@@ -28,7 +28,8 @@ export default function Home() {
   const dispatch = useAppDispatch()
   const [triggerGetToken, { isError, isSuccess }, info] = userApi.endpoints.getToken.useLazyQuery()
   const { register, handleSubmit, watch, formState: { errors }, } = useForm<ILoginRequest>()
-  const {setLoginResult } = useLoginStorage()
+  // const {setLoginResult } = useLoginStorage()
+  // breaks bvecause of bad json handling 
 
   const onSubmit: SubmitHandler<ILoginRequest> = async (loginRequest) => {
     const { isError, data: loginResult } = await triggerGetToken(loginRequest)
@@ -39,7 +40,7 @@ export default function Home() {
     console.log(`saved serializedValue : ${serializedValue}`)
 
     dispatch(setUser(loginResult as LoginResult))
-   // setLoginResult(loginResult as LoginResult)
+    // setLoginResult(loginResult as LoginResult)
     router.push("/homePage")
     console.log("not error")
   }
@@ -71,6 +72,8 @@ export default function Home() {
             <label> {isSuccess ? "Success" : ""} </label>
           </div>
         </Box>
+        <Link href={""}>
+        </Link>
       </Container>
     </>
   )
