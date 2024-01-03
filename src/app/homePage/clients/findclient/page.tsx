@@ -1,6 +1,4 @@
 'use client'
-import { CaseDto } from '../../../../../mercichatgpt/ProcedureMakerServer/Dtos/CaseDto';
-import { useGetCasesQuery } from '@/app/Redux/Apis/caseApi'
 import { useAppSelector } from '@/app/Redux/hooks'
 import { useRouter } from 'next/navigation';
 import styles from './cardHover.module.css'
@@ -10,18 +8,17 @@ import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import useGetCasesLocal from '@/app/Hooks/useGetCasesLocal';
-
-
-
+import { CaseDto, useGetCaseGetcasescontextQuery } from '@/app/Redux/codegen/userApi2Gen';
+import { GetCases } from '@/app/TypeScriptExtensions/CaseContextDtoExtensions';
 export default function FindClient() {
     const caseSlice = useAppSelector(s => s.userSlice.userDto)
 
     useGetCasesLocal()
-    const { isError, isFetching, data: caseContext } = useGetCasesQuery()
+    const { isError, isFetching, data: caseContext } = useGetCaseGetcasescontextQuery()
 
     return (
         <div>
-            {(!isError && !isFetching) && <CaseList caseDtos={caseContext?.cases} />}
+            {(!isError && !isFetching) && <CaseList caseDtos={GetCases(caseContext)} />}
         </div>
     )
 }
@@ -38,7 +35,7 @@ function CaseList({ caseDtos }: ICaseListProps) {
                 <Stack direction='row' justifyContent='center' alignContent='center' >
                     <ul>
                         {caseDtos?.map(c => (
-                            <li key={c.client.id}>
+                            <li key={c.id}>
                                 <CaseSummary caseDto={c} />
                             </li>
                         ))}

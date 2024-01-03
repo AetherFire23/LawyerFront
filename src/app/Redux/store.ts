@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userApi } from "./Apis/userApi";
-import {caseApi} from "./Apis/caseApi"
+import {  userApi2} from "./codegen/userApi2";
 import userSlice from "./Slices/userSlice";
 import caseSlice from './Slices/caseSlice';
 // ...
@@ -9,11 +8,10 @@ export const store = configureStore({
   reducer: {
     userSlice: userSlice,
     caseSlice: caseSlice,
-    [userApi.reducerPath]: userApi.reducer,
-    [caseApi.reducerPath]: caseApi.reducer,
+    [userApi2.reducerPath]: userApi2.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userApi.middleware).concat(caseApi.middleware),
+    getDefaultMiddleware().concat(userApi2.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

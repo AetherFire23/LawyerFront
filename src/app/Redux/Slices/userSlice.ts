@@ -1,9 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
-import { LoginResult } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult";
-import { UserDto } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/UserDto";
-import { userApi } from "../Apis/userApi";
-import { Role } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/Role";
+// import { LoginResult } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult";
+// import { UserDto } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/UserDto";
+// import { userApi } from "../Apis/userApi";
+// import { Role } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/Role";
+import { LoginResult, UserDto, userApiGen2, RoleTypes } from "../codegen/userApi2Gen"
+import { userApi2 } from "../codegen/userApi2";
+
 // Define a type for the slice state
 // Define the initial state using that type
 const userDto: UserDto = {
@@ -33,23 +36,25 @@ export const userSlice = createSlice({
 
       console.log("this is the current state in set user");
       console.log(userDto);
-      userState.userDto.id = userDto.id;
-      userState.userDto.lawyerId = userDto.lawyerId;
-      userState.userDto.name = userDto.name;
-      userState.userDto.roles = userDto.roles;
+
+      userState!.userDto!.id = userDto?.id 
+      userState!.userDto!.lawyerId = userDto?.lawyerId
+      userState!.userDto!.name = userDto?.name
+      userState!.userDto!.roles = userDto?.roles
+      
       userState.token = token;
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      // update context when its received for getCases
-      userApi.endpoints.getToken.matchFulfilled,
-      (state, { payload: caseContext }) => {
-        state.token = caseContext.token;
-        state.userDto = caseContext.userDto;
-        console.log("Store state of user slice has been updated.");
-      }
-    );
+    // builder.addMatcher(
+    //   // updatze context when its received for getCases
+    //   userApiGen2.endpoints.putUserCredentialslogin.matchFulfilled,
+    //   (state, { payload: caseContext }) => {
+    //     state.token = caseContext.token;
+    //     state.userDto = caseContext.userDto;
+    //     console.log("Store state of user slice has been updated.");
+    //   }
+    // );
   },
 });
 

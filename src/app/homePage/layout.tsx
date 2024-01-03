@@ -8,32 +8,26 @@ import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Link from "next/link"
 import AppBarMenu from '../Controls/AppBarMenu'
-import { useLocalStorage, useLoginStorage } from '../Hooks/LocalStorage'
-import { LoginResult } from '../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult'
 import { setUser } from '../Redux/Slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../Redux/hooks'
 import { useEffect } from 'react';
-import { useGetCasesQuery } from '../Redux/Apis/caseApi'
-
-// use normal getcase but set it using the userSlice here
 
 export default function HomeLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    // const userSlice = useAppSelector(state => state.userSlice)
+    // const dispatch = useAppDispatch()
+    // useEffect(() => {
+    //     if(!window) return;
+    //     const storedValue: string = window.localStorage.getItem("jwtToken") ?? ""
+    //     //onst storedvalues = JSON.parse(storedValue) as LoginResult
+    //     //dispatch(setUser(storedvalues as LoginResult))
 
-    const us = useAppSelector(state => state.userSlice)
-    const dispatch = useAppDispatch()
-    useEffect(() => {
-        console.log("this is loginResult inside of homePageLayout")
-        const storedValue: string = window.localStorage.getItem("jwtToken") ?? ""
-        const storedvalues = JSON.parse(storedValue) as LoginResult
-        dispatch(setUser(storedvalues as LoginResult))
+    // }, []);
 
-    }, []);
-
-    const { data } = useGetCasesQuery()
+    // //const { data } = useGetCasesQuery()
 
 
 

@@ -1,44 +1,36 @@
 'use client'
-import { ILoginRequest } from '../../mercichatgpt/ProcedureMakerServer/Authentication/AuthModels/ILoginRequest'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from "next/link"
 import { useRouter } from 'next/navigation'
-import { userApi } from './Redux/Apis/userApi';
 import { useState } from 'react';
 import { useAppDispatch } from './Redux/hooks';
-import { setUser } from './Redux/Slices/userSlice';
-import { LoginResult } from '../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult';
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Box, Input, Container, TextField, Typography } from '@mui/material';
 import { useLoginStorage } from './Hooks/LocalStorage';
-
-
-
+import { usePutUserCredentialsloginMutation, LoginRequest, userApiGen2, UserDto, PutUserCredentialsloginApiArg, LoginResult } from './Redux/codegen/userApi2Gen';
+import { userApi2 } from './Redux/codegen/userApi2';
+import { setUser } from './Redux/Slices/userSlice';
 // TODO
 // auto re-log with redux
 // date objects not serializable?
-
-
 // seed client data on server startup
-
-
 export default function Home() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const [triggerGetToken, { isError, isSuccess }, info] = userApi.endpoints.getToken.useLazyQuery()
-  const { register, handleSubmit, watch, formState: { errors }, } = useForm<ILoginRequest>()
-  // const {setLoginResult } = useLoginStorage()
-  // breaks bvecause of bad json handling 
+  const [fetchTokenFromUserCredentials, { isError, isLoading, isSuccess, data: loginResult }] = userApiGen2.usePutUserCredentialsloginMutation()
 
-  const onSubmit: SubmitHandler<ILoginRequest> = async (loginRequest) => {
-    const { isError, data: loginResult } = await triggerGetToken(loginRequest)
+  const { register, handleSubmit, watch, formState: { errors }, } = useForm<LoginRequest>()
+  const onSubmit: SubmitHandler<LoginRequest> = async (loginRequest) => {
+    await fetchTokenFromUserCredentials({ body: loginRequest });
+    console.log("am i here")
     if (isError) return;
 
     const serializedValue = JSON.stringify(loginResult)
     window.localStorage.setItem('jwtToken', serializedValue)
     console.log(`saved serializedValue : ${serializedValue}`)
 
+    // faut trouver comment injecter des trucs apres une request pour pouvoir saver le userSlice
     dispatch(setUser(loginResult as LoginResult))
     // setLoginResult(loginResult as LoginResult)
     router.push("/homePage")

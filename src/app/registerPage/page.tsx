@@ -1,14 +1,11 @@
 'use client'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { RegisterRequest } from '../../../mercichatgpt/ProcedureMakerServer/Authentication/AuthModels/RegisterRequest';
 import Link from "next/link"
-import { useRegisterMutation } from '../Redux/Apis/userApi';
+import { usePostUserRegisterMutation, RegisterRequest, RoleTypes } from '../Redux/codegen/userApi2Gen';
 import { Box, Button, Container, TextField } from '@mui/material';
-import { CourtRoles } from '../../../mercichatgpt/ProcedureMakerServer/Enums/CourtRoles';
-import { RoleTypes } from '../../../mercichatgpt/ProcedureMakerServer/Authentication/RoleTypes';
 
 export default function RegisterPage() {
-    const [triggerRegister, { isLoading, isError, isSuccess }] = useRegisterMutation()
+    const [triggerRegister, { isLoading, isError, isSuccess }] = usePostUserRegisterMutation()
     const {
         register,
         handleSubmit,
@@ -17,9 +14,8 @@ export default function RegisterPage() {
     } = useForm<RegisterRequest>()
 
     const onSubmit: SubmitHandler<RegisterRequest> = async (data: RegisterRequest) => {
-        data.role = RoleTypes.Normal
-        triggerRegister(data)
-
+        data.role = 1;// 1 for NormalRole
+        triggerRegister({ body: data })
     };
 
     return (
@@ -32,9 +28,9 @@ export default function RegisterPage() {
                         {(errors.username || errors.password) && <span> Both fields are required </span>}
                         <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
                     </form>
-                        <Link href={"/"}>
-                            <Button> Back </Button>
-                        </Link>
+                    <Link href={"/"}>
+                        <Button> Back </Button>
+                    </Link>
                     <label> {isLoading ? "loading" : ""} </label>
                     <label> {isError ? "Error while registering" : ""} </label>
                     <label> {isSuccess ? "Success!" : ""} </label>
