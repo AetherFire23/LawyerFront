@@ -19,6 +19,8 @@ export const userApi2 = createApi({
     baseUrl: 'http://localhost:5099',
     prepareHeaders: (headers, { getState }) => {
       const rooState = getState() as RootState // Seems like I need to cast to RootState to access my store
+
+      // Idea is that user must be initialized before doing any kind of stupid request 
       const token = rooState.userSlice.token
 
       // since this is injected all the time, there might be a point where a request is made
@@ -39,15 +41,21 @@ export const userApi2 = createApi({
 // also, it does not make a difference. I would still have to put an attribute server-side
 // which is not that much different to doing it here also. 
 
+
+// it keeps saying to take the codegenApi 
+// and then to enhance it, but I need to reference the userApi2, the one that
+// is not code-gen
+// SO i DO have to deal with the fact that i have no intellisense 
+// to reference the correct query when adding the tags, what a bummer
 const caseTag = ['Case']
-const enhancedApi = userApiGen2.enhanceEndpoints({
-  addTagTypes: caseTag,
-  endpoints: {
-    getCaseGetcasescontext: {
-      providesTags: caseTag,
-    },
-    putCaseAddclient:{
-      invalidatesTags: caseTag
-    }
-  }
-})
+// const enhancedApi = userApi2.enhanceEndpoints({
+//   addTagTypes: caseTag,
+//   endpoints: {
+//     getCaseGetcasescontext: {
+//       providesTags: caseTag,
+//     },
+//     putCaseAddclient: {
+//       invalidatesTags: caseTag
+//     }
+//   }
+// })

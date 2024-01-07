@@ -1,8 +1,8 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import ProvidersContainer from './Components/ProvidersContainer'
+import ProvidersContainer from '../../LogicFiles/Components/ProvidersContainer'
 import Providers from './Redux/Providers'
-import ThemeRegistry from './MUIStuff/ThemeRegistry'
+import ThemeRegistry from '../../LogicFiles/MUIStuff/ThemeRegistry'
 import { SessionProvider } from 'next-auth/react'
 
 export const metadata: Metadata = {

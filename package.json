@@ -17,7 +17,7 @@
     "axios": "^1.5.1",
     "esbuild-runner": "^2.2.2",
     "immer": "^10.0.3",
-    "next": "^14.0.0",
+    "next": "^14.0.5-canary.41",
     "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",

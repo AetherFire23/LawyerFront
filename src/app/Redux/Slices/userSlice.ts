@@ -1,21 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
-// import { LoginResult } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult";
-// import { UserDto } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/UserDto";
-// import { userApi } from "../Apis/userApi";
-// import { Role } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/Role";
-import { LoginResult, UserDto, userApiGen2, RoleTypes } from "../codegen/userApi2Gen"
-import { userApi2 } from "../codegen/userApi2";
+import { LoginResult, UserDto } from "../codegen/userApi2Gen"
+import logObject from "../../../../LogicFiles/Utils/logObject";
 
-// Define a type for the slice state
 // Define the initial state using that type
 const userDto: UserDto = {
   id: "2",
   lawyerId: "2",
   name: "",
-  roles: [0],
+  roles: ["Normal"],
 
-} as UserDto;
+}
 
 const initialState: LoginResult = {
   token: "",
@@ -31,18 +25,12 @@ export const userSlice = createSlice({
       userState,
       { payload: { token, userDto } }: PayloadAction<LoginResult>
     ) => {
-      console.log("this is the loginResult in set user");
-      console.log(userState);
-
-      console.log("this is the current state in set user");
-      console.log(userDto);
-
-      userState!.userDto!.id = userDto?.id 
+      userState!.userDto!.id = userDto?.id
       userState!.userDto!.lawyerId = userDto?.lawyerId
       userState!.userDto!.name = userDto?.name
       userState!.userDto!.roles = userDto?.roles
-      
       userState.token = token;
+      logObject("user draft set to:", userState)
     },
   },
   extraReducers: (builder) => {

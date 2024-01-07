@@ -1,94 +1,232 @@
-'use client'
-import { useSearchParams } from 'next/navigation'
-import { CaseDto } from '../../../../../../mercichatgpt/ProcedureMakerServer/Dtos/CaseDto';
-import { useAppSelector } from '@/app/Redux/hooks'
-import { useGetCasesQuery, useSaveCaseMutation } from '@/app/Redux/Apis/caseApi';
-import { useForm, SubmitHandler, Controller, useFieldArray } from 'react-hook-form'
-import { produce } from 'immer';
-import { CourtRoles } from '../../../../../../mercichatgpt/ProcedureMakerServer/Enums/CourtRoles';
-import Button from '@mui/material/Button';
-import { TextField } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select'
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
+"use client";
+import { useAppSelector } from "@/app/Redux/hooks";
+import { Container, Paper, TextField, Typography } from "@mui/material";
+import { CaseDto, ClientDto, CourtRoles, usePostCaseCreatenewcaseMutation } from "@/app/Redux/codegen/userApi2Gen";
+import { SubmitHandler, useForm } from "react-hook-form";
+import Button from "@mui/material/Button";
+import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
+import { enhancedApi } from "@/app/Redux/codegen/enhancedApi";
+import {
+  RenderKeyedList,
+  mapFormDataToCaseDto,
+  useCaseIdSearchParam,
+  useFormReset,
+} from "./infpoage-hooks";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+
 // https://www.svgrepo.com/svg/522262/save-floppy
 
-function useCaseDto() {
-    const searchParams = useSearchParams()
-    const caseId: string = searchParams.get("search") as string
-    //const cases: CaseDto[] = useAppSelector(s => s.caseSlice.cases)
-    const userSelector = useAppSelector(s => s.userSlice)
+// workaround to oazapfts implementation in rtk query codegen
+// not generating typescript enums and using sting union types instead.
+// More precisely, the string argument is ensured to be included inside the code-generated union type
+// function ensureCase<TUnion extends string>(op: TUnion) {
+//     return op
+// }
 
+function logObject(message: string, obj: any) {
+  console.log(message);
+  console.log(obj);
+}
 
-    const { data } = useGetCasesQuery(userSelector.userDto.lawyerId)
+function ensureCourtRole(op: CourtRoles) {
+  return op;
+}
 
-    const caseDto: CaseDto = data?.cases.find(c => c.id === caseId) as CaseDto // break if not found, not supposed to happen
+function useClientDtoSearchParam() {
+  useStoreUserFromLocalStorage()
+  const searchParams = useSearchParams()
+  const caseId = searchParams.get("clientId")
+  const clients = useAppSelector((s) => s.caseSlice.clients);
 
-    console.log("this is the data retrieved from cases query ")
-    console.log(caseDto)
-    return caseDto
+  // need this cast as clientDto to avoid
+  // feeding undefined to the react hook form library and therefore
+  // I avoid a null exception
+  const clientDto = clients
+    ? (clients.find((c) => c.id === caseId) as ClientDto)
+    : ({} as ClientDto);
+
+  return clientDto
 }
 
 export default function InfoPage() {
-    const caseDto = useCaseDto()
-    const [triggerSaveCase, { isError, isSuccess, isLoading }] = useSaveCaseMutation()
-    const { register, handleSubmit, watch, formState: { errors }, control } = useForm<CaseDto>({
-        defaultValues: caseDto
+  const clientDto = useClientDtoSearchParam()
+  const { isFetching: isFetchingCases } = enhancedApi.useGetCaseGetcasescontextQuery();
+
+  logObject("client:", clientDto);
+
+  return (
+    <div>
+      {isFetchingCases && <div> fetching cases... </div>}
+      {!isFetchingCases && (
+        <div>
+          <h1> infopage </h1>
+          <ClientForm clientDto={clientDto} />
+          <ClientCasesList clientDto={clientDto} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ClientForm({ clientDto }: { clientDto: ClientDto }) {
+  const { isFetching: isFetchingCases, isSuccess: isSuccessCases } = enhancedApi.useGetCaseGetcasescontextQuery();
+  const [triggerUpdateClient,] = enhancedApi.usePutCaseUpdateclientMutation();
+  const { register, handleSubmit, watch, formState: { errors }, control, reset, } = useForm<ClientDto>({ defaultValues: clientDto, });
+  useFormReset(isSuccessCases, clientDto, reset);
+
+  const onSubmitClientUpdate: SubmitHandler<ClientDto> = async (caseDtoFormData) => {
+    console.log("submitting client");
+    const nextClientDto = mapFormDataToCaseDto(clientDto, caseDtoFormData);
+    triggerUpdateClient({ body: nextClientDto });
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmitClientUpdate)}>
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "25vw",
+        }}
+      >
+        <Button type="submit"> Save </Button>
+        {/* <FormTextField additionalProps={register("address", {})} /> */}
+        <TextField
+          {...register("address", {})}
+          id="standard-basic"
+          label="adresse"
+          variant="outlined"
+          className="input mb-5 input-bordered"
+          defaultValue=""
+        />
+        <TextField
+          {...register("firstName", {})}
+          id="standard-basic"
+          label="firstName"
+          variant="outlined"
+          className="input mb-5 input-bordered"
+          defaultValue=""
+        />
+        <TextField
+          {...register("lastName", {})}
+          id="standard-basic"
+          label="lastName"
+          variant="outlined"
+          className="input mb-5 input-bordered"
+          defaultValue=""
+        />
+        <TextField {...register("email", {})} id="standard-basic" label="email" variant="outlined" className="input mb-5 input-bordered" defaultValue=""
+        />
+      </Container>
+    </form>
+  );
+}
+
+function ClientCasesList({ clientDto }: { clientDto: ClientDto }) {
+
+  logObject('those are the caseDtos of the client:', clientDto.cases)
+  const canRenderCases = clientDto.cases && Object.keys(clientDto.cases).length !== 0
+  return (
+    <Container
+      sx={{
+        width: "25vw",
+      }}>
+      <AddCaseButton clientId={clientDto.id} />
+
+      <ul>
+        {canRenderCases && clientDto.cases?.map(c => (
+          <li key={c.id} >
+            <ClientCaseCard caseDto={c} />
+          </li>
+        ))}
+      </ul>
+    </Container>
+  );
+}
+
+function ClientCaseCard({ caseDto }: { caseDto: CaseDto }) {
+  logObject(`caseCard: `, caseDto)
+  const navigate = useNavigateToCase()
+  return (
+    <Paper
+      elevation={3}
+      sx={{
+      }}
+      onClick={() => navigate(caseDto.id)}
+    >
+      <Typography> {caseDto.id.slice(0, 4)} </Typography>
+    </Paper>
+  )
+}
+
+function AddCaseButton({ clientId }: { clientId: string }) {
+  const [triggerAddCase, queryData] = usePostCaseCreatenewcaseMutation()
+  const navigate = useNavigateToCase()
+  function addCaseAndNavigate() {
+    triggerAddCase({ clientId: clientId }).unwrap().then(caseid => {
+      navigate(caseid.createdId!)
     })
+  }
+  return (
+    <Button onClick={addCaseAndNavigate}> Add Case </Button>
+  )
+}
 
-    const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-        control, // control props comes from useForm (optional: if you are using FormContext)
-        name: 'participants', // unique name for your Field Array
-    });
+function useNavigateToCase() {
+  const router = useRouter()
+  function navigate(caseId: string) {
+    router.push(`/homePage/clients/clientpage/infopage/casepage?caseId=${caseId}`)
+  }
+  return navigate
+}
 
-    const onSubmit: SubmitHandler<CaseDto> = async (caseDtoFormData) => {
-        const nextCaseState = produce(caseDto, caseDraft => { // me souviens pus pk mais faut jutilise immer icitte 
-            caseDraft.client.firstName = caseDtoFormData.client.firstName
-            caseDraft.courtAffairNumber = caseDtoFormData.courtAffairNumber
-            caseDraft.participants = caseDtoFormData.participants
-        })
 
-        console.log(caseDtoFormData as CaseDto)
-        triggerSaveCase(nextCaseState)
 
-        console.log('this is the formdata object:')
-        console.log(caseDtoFormData)
 
-        console.log('this is the dto object:')
-        console.log(caseDto)
-    }
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='flex flex-col items-center justify-center'>
-                <Button type='submit'> Save </Button>
-                <div className='flex flex-row justify-center mt-12'>
-                    <div className='p-5 card flex flex-col items-center items justify-start mr-64 bg-neutral'>
-                        <a> Client information </a>
-                        <TextField id="standard-basic" label="Standard" variant="outlined" className="input mb-5 input-bordered" defaultValue="" {...register("client.email", {})} />
-                        <TextField id="standard-basic" label="Standard" variant="outlined" className="input mb-5 input-bordered" defaultValue="" {...register("client.firstName", {})} />
-                        <Controller
-                            name="client.courtRole"
-                            control={control}
-                            render={({ field }) => (
-                                <select className='select w-full max-w-xs' {...field}>
-                                    <option value={CourtRoles.Plaintiff}> Plaintiff </option>
-                                    <option value={CourtRoles.Defender}> Defender </option>
-                                    <option value={CourtRoles.Intimated}> Intimated </option>
-                                </select>
-                            )}
-                        />
-                    </div>
-                    {/* https://react-hook-form.com/docs/usefieldarray va falloir que je dompte cette beast*/}
-                    {/*  court info */}
-                    <div className='p-5 card flex flex-col items-center items justify-start bg-neutral'>
-                        <a> Court information </a>
-                        <input placeholder='courtAffairNumber' className="input mb-5 input-bordered" defaultValue="" {...register("courtAffairNumber", {})} />
-                    </div>
-                </div>
-                {/* participants */}
+
+
+
+
+
+
+{
+  /* <div>
+            <a></a>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className='flex flex-col items-center justify-center'>
+                    <Button type='submit'> Save </Button>
+
+                    {/* client */
+}
+// <div className='flex flex-row justify-center mt-12'>
+//     <div className='p-5 card flex flex-col items-center items justify-start mr-64 bg-neutral'>
+//         <a> Client information </a>
+//         <TextField id="standard-basic" label="Standard" variant="outlined" className="input mb-5 input-bordered" defaultValue="" {...register("client.email", {})} />
+//         <TextField id="standard-basic" label="Standard" variant="outlined" className="input mb-5 input-bordered" defaultValue="" {...register("client.firstName", {})} />
+//         <Controller
+//             name="client.courtRole"
+//             control={control}
+//             render={({ field }) => (
+//                 <select className='select w-full max-w-xs' {...field}>
+//                     <option value={ensureCourtRole("Plaintiff")}> Plaintiff </option>
+//                     <option value={ensureCourtRole("Defender")}> Defender </option>
+//                     <option value={ensureCourtRole("Intimated")}> Intimated </option>
+//                 </select>
+//             )}
+//         />
+//     </div>
+//     {/* https://react-hook-form.com/docs/usefieldarray va falloir que je dompte cette beast*/}
+//     {/*  court info */}
+//     <div className='p-5 card flex flex-col items-center items justify-start bg-neutral'>
+//         <a> Court information </a>
+//         <input placeholder='courtAffairNumber' className="input mb-5 input-bordered" defaultValue="" {...register("courtAffairNumber", {})} />
+//     </div>
+// </div>
+
+{
+  /* participants
                 <div >
                     <a> Participants </a>
                     {
@@ -103,8 +241,8 @@ export default function InfoPage() {
                                                 control={control}
                                                 render={({ field }) => (
                                                     <Select {...field} defaultValue={field.value}>
-                                                        <MenuItem value={CourtRoles.Defender}>Defender</MenuItem>
-                                                        <MenuItem value={CourtRoles.Plaintiff}>Plaintiff</MenuItem>
+                                                        <MenuItem value={ensureCourtRole("Defender")}>Defender</MenuItem>
+                                                        <MenuItem value={ensureCourtRole("Plaintiff")}>Plaintiff</MenuItem>
                                                     </Select>
                                                 )}
                                             />
@@ -116,8 +254,12 @@ export default function InfoPage() {
                         })
                     }
                 </div>
-                <button className='btn' type='button' onClick={e => append({} as any)}> Add participant </button>
-            </div>
-        </form>
-    );
+ */
 }
+
+{
+  /* <button className='btn' type='button' onClick={e => append({} as any)}> Add participant </button> */
+}
+//         </div>
+//     </form>
+// </div> */}

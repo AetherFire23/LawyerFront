@@ -1,9 +1,9 @@
 'use client'
 import { useAppDispatch } from '../Redux/hooks';
-import useGetCasesLocal from '../Hooks/useGetCasesLocal'; 
+import useStoreUserFromLocalStorage from '../../../LogicFiles/Hooks/useGetCasesLocal'; 
 export default function HomePage() {
     const dispatch = useAppDispatch()
-    useGetCasesLocal()
+    
     
     // used as refernce to get the token stored inside the window
     // useEffect(() => {

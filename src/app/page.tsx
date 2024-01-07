@@ -7,7 +7,7 @@ import { useAppDispatch } from './Redux/hooks';
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Box, Input, Container, TextField, Typography } from '@mui/material';
-import { useLoginStorage } from './Hooks/LocalStorage';
+import { useLoginStorage } from '../../LogicFiles/Hooks/LocalStorage';
 import { usePutUserCredentialsloginMutation, LoginRequest, userApiGen2, UserDto, PutUserCredentialsloginApiArg, LoginResult } from './Redux/codegen/userApi2Gen';
 import { userApi2 } from './Redux/codegen/userApi2';
 import { setUser } from './Redux/Slices/userSlice';
@@ -26,11 +26,11 @@ export default function Home() {
     console.log("am i here")
     if (isError) return;
 
+    // retrieve token from local storage.
     const serializedValue = JSON.stringify(loginResult)
     window.localStorage.setItem('jwtToken', serializedValue)
     console.log(`saved serializedValue : ${serializedValue}`)
 
-    // faut trouver comment injecter des trucs apres une request pour pouvoir saver le userSlice
     dispatch(setUser(loginResult as LoginResult))
     // setLoginResult(loginResult as LoginResult)
     router.push("/homePage")

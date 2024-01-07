@@ -14,7 +14,8 @@ export default function RegisterPage() {
     } = useForm<RegisterRequest>()
 
     const onSubmit: SubmitHandler<RegisterRequest> = async (data: RegisterRequest) => {
-        data.role = 1;// 1 for NormalRole
+        // data.role = 1;// 1 for NormalRole
+        data.role = "Normal"
         triggerRegister({ body: data })
     };
 
@@ -26,7 +27,7 @@ export default function RegisterPage() {
                         <TextField id="standard-basic" label="UserName" variant="standard" defaultValue="" {...register("username", { required: true })} />
                         <TextField id="standard-basic" label="Password" variant="standard" {...register("password", { required: true })} />
                         {(errors.username || errors.password) && <span> Both fields are required </span>}
-                        <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
+                        <Button sx={{ marginTop: '1em' }} type="submit"> Register </Button>
                     </form>
                     <Link href={"/"}>
                         <Button> Back </Button>

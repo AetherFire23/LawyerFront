@@ -1,13 +1,9 @@
 'use client'
 
 import { SubmitHandler, useForm, Controller } from "react-hook-form"
-import { Lawyer } from "../../../../mercichatgpt/ProcedureMakerServer/Entities/Lawyer"
-import { CasesContext } from "../../../../mercichatgpt/ProcedureMakerServer/Dtos/CasesContext"
 import { useAppSelector } from "@/app/Redux/hooks"
-import caseSlice from '../../Redux/Slices/caseSlice';
+import caseSlice from '../../Redux/Slices/caseSlice'
 import { produce } from "immer"
-import { useGetCasesQuery } from "@/app/Redux/Apis/caseApi"
-import { useSaveCaseMutation, useSaveLawyerMutation } from "@/app/Redux/Apis/caseApi"
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';

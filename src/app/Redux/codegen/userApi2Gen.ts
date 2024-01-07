@@ -14,7 +14,7 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/case/createnewcase`,
         method: "POST",
-        body: queryArg.body,
+        params: { clientId: queryArg.clientId },
       }),
     }),
     putCaseSavecase: build.mutation<
@@ -41,8 +41,14 @@ const injectedRtkApi = api.injectEndpoints({
       PutCaseAddclientApiResponse,
       PutCaseAddclientApiArg
     >({
+      query: () => ({ url: `/case/addclient`, method: "PUT" }),
+    }),
+    putCaseUpdateclient: build.mutation<
+      PutCaseUpdateclientApiResponse,
+      PutCaseUpdateclientApiArg
+    >({
       query: (queryArg) => ({
-        url: `/case/addclient`,
+        url: `/case/updateclient`,
         method: "PUT",
         body: queryArg.body,
       }),
@@ -53,7 +59,6 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({
         url: `/case/createcaseparticipant`,
-        body: queryArg.body,
         params: { caseId: queryArg.caseId },
       }),
     }),
@@ -145,7 +150,6 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/invoice/createactivity`,
         method: "POST",
-        body: queryArg.body,
         params: { invoiceId: queryArg.invoiceId },
       }),
     }),
@@ -176,7 +180,6 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/invoice/createbillingelement`,
         method: "POST",
-        body: queryArg.body,
         params: { lawyerId: queryArg.lawyerId },
       }),
     }),
@@ -207,7 +210,6 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/invoice/addfundstotrust`,
         method: "POST",
-        body: queryArg.body,
         params: { clientId: queryArg.clientId },
       }),
     }),
@@ -238,7 +240,6 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/invoice/addinvoicepayment`,
         method: "PUT",
-        body: queryArg.body,
         params: { invoiceId: queryArg.invoiceId },
       }),
     }),
@@ -327,7 +328,7 @@ export type GetCaseGetcasescontextApiArg = void;
 export type PostCaseCreatenewcaseApiResponse =
   /** status 200 Success */ GetCaseResponse;
 export type PostCaseCreatenewcaseApiArg = {
-  body: CaseCreationInfo;
+  clientId?: string;
 };
 export type PutCaseSavecaseApiResponse = unknown;
 export type PutCaseSavecaseApiArg = {
@@ -337,14 +338,16 @@ export type PutCaseUpdatelawyerApiResponse = unknown;
 export type PutCaseUpdatelawyerApiArg = {
   body: LawyerDto;
 };
-export type PutCaseAddclientApiResponse = unknown;
-export type PutCaseAddclientApiArg = {
+export type PutCaseAddclientApiResponse = /** status 200 Success */ string;
+export type PutCaseAddclientApiArg = void;
+export type PutCaseUpdateclientApiResponse = unknown;
+export type PutCaseUpdateclientApiArg = {
   body: ClientDto;
 };
-export type GetCaseCreatecaseparticipantApiResponse = unknown;
+export type GetCaseCreatecaseparticipantApiResponse =
+  /** status 200 Success */ string;
 export type GetCaseCreatecaseparticipantApiArg = {
   caseId?: string;
-  body: CaseParticipantDto;
 };
 export type GetCaseUpdatecaseparticipantApiResponse = unknown;
 export type GetCaseUpdatecaseparticipantApiArg = {
@@ -379,7 +382,8 @@ export type GetInvoiceGettrustclientcarddtoClientidByClientIdApiResponse =
 export type GetInvoiceGettrustclientcarddtoClientidByClientIdApiArg = {
   clientId: string;
 };
-export type PostInvoiceCreateinvoiceApiResponse = unknown;
+export type PostInvoiceCreateinvoiceApiResponse =
+  /** status 200 Success */ string;
 export type PostInvoiceCreateinvoiceApiArg = {
   caseId?: string;
 };
@@ -391,10 +395,10 @@ export type PutInvoiceArchiveinvoiceApiResponse = unknown;
 export type PutInvoiceArchiveinvoiceApiArg = {
   invoiceId?: string;
 };
-export type PostInvoiceCreateactivityApiResponse = unknown;
+export type PostInvoiceCreateactivityApiResponse =
+  /** status 200 Success */ string;
 export type PostInvoiceCreateactivityApiArg = {
   invoiceId?: string;
-  body: ActivityDto;
 };
 export type PutInvoiceUpdateactivityApiResponse = unknown;
 export type PutInvoiceUpdateactivityApiArg = {
@@ -404,10 +408,10 @@ export type PutInvoiceRemoveactivityApiResponse = unknown;
 export type PutInvoiceRemoveactivityApiArg = {
   activityId?: string;
 };
-export type PostInvoiceCreatebillingelementApiResponse = unknown;
+export type PostInvoiceCreatebillingelementApiResponse =
+  /** status 200 Success */ string;
 export type PostInvoiceCreatebillingelementApiArg = {
   lawyerId?: string;
-  body: BillingElementDto;
 };
 export type PostInvoiceUpdatebillingelementApiResponse = unknown;
 export type PostInvoiceUpdatebillingelementApiArg = {
@@ -420,7 +424,6 @@ export type PostInvoiceDeletebillingelementApiArg = {
 export type PostInvoiceAddfundstotrustApiResponse = unknown;
 export type PostInvoiceAddfundstotrustApiArg = {
   clientId?: string;
-  body: TrustPaymentDto;
 };
 export type PutInvoiceUpdatetrustpaymentApiResponse = unknown;
 export type PutInvoiceUpdatetrustpaymentApiArg = {
@@ -430,10 +433,10 @@ export type DeleteInvoiceRemovetrustpaymentApiResponse = unknown;
 export type DeleteInvoiceRemovetrustpaymentApiArg = {
   trustPaymentId?: string;
 };
-export type PutInvoiceAddinvoicepaymentApiResponse = unknown;
+export type PutInvoiceAddinvoicepaymentApiResponse =
+  /** status 200 Success */ string;
 export type PutInvoiceAddinvoicepaymentApiArg = {
   invoiceId?: string;
-  body: InvoicePaymentDto;
 };
 export type PutInvoiceUpdateinvoicepaymentApiResponse = unknown;
 export type PutInvoiceUpdateinvoicepaymentApiArg = {
@@ -469,24 +472,38 @@ export type PostUserRegisterApiArg = {
 };
 export type GetUserAuthorizedrequestblablaApiResponse = unknown;
 export type GetUserAuthorizedrequestblablaApiArg = void;
-export type RoleTypes = 0 | 1;
+export type RoleTypes = "Admin" | "Normal";
 export type UserDto = {
-  id?: string;
   name?: string | null;
   lawyerId?: string;
   roles?: RoleTypes[] | null;
+  id: string;
 };
-export type Genders = 0 | 1;
-export type CourtRoles = 0 | 1 | 2 | 3 | 4 | 5;
 export type BillingElementDto = {
-  id?: string;
   activityName?: string | null;
   amount?: number;
   isHourlyRate?: boolean;
   isDisburse?: boolean;
+  isInvoiceSpecific?: boolean;
+  id: string;
 };
+export type CourtRoles =
+  | "DeterminedByCase"
+  | "Intimated"
+  | "PutInCause"
+  | "Plaintiff"
+  | "Defender"
+  | "PlaintiffLawyer"
+  | "DefenderLawyer";
+export type Genders = "Male" | "Female";
 export type LawyerDto = {
-  id?: string;
+  courtLockerNumber?: string | null;
+  billsEmittedCount?: number;
+  defaultHourlyElement?: BillingElementDto | null;
+  billingElements?: BillingElementDto[] | null;
+  notificationEmail?: string | null;
+  courtRole?: CourtRoles;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -503,16 +520,18 @@ export type LawyerDto = {
   gender?: Genders;
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
-  notificationEmail?: string | null;
-  courtRole?: CourtRoles;
-  mustNotify?: boolean;
+  id: string;
+};
+export type LawyerDtoRead = {
   courtLockerNumber?: string | null;
   billsEmittedCount?: number;
   defaultHourlyElement?: BillingElementDto | null;
   billingElements?: BillingElementDto[] | null;
-};
-export type LawyerDtoRead = {
-  id?: string;
+  notificationEmail?: string | null;
+  fullName?: string | null;
+  courtRole?: CourtRoles;
+  isNotifiable?: boolean;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -532,34 +551,28 @@ export type LawyerDtoRead = {
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
   genderedName?: string | null;
-  notificationEmail?: string | null;
-  fullName?: string | null;
-  courtRole?: CourtRoles;
-  isNotifiable?: boolean;
-  mustNotify?: boolean;
-  courtLockerNumber?: string | null;
-  billsEmittedCount?: number;
-  defaultHourlyElement?: BillingElementDto | null;
-  billingElements?: BillingElementDto[] | null;
+  id: string;
 };
 export type TrustPaymentDto = {
-  id?: string;
   amount?: number;
   date?: string | null;
+  id: string;
 };
 export type TrustWithdrawDto = {
-  id?: string;
   amount?: number;
   date?: string;
+  id: string;
 };
 export type TrustClientCardDto = {
-  id?: string;
   clientId?: string;
   payments?: TrustPaymentDto[] | null;
   withdraws?: TrustWithdrawDto[] | null;
+  id: string;
 };
 export type CaseParticipantDto = {
-  id?: string;
+  notificationEmail?: string | null;
+  courtRole?: CourtRoles;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -576,12 +589,14 @@ export type CaseParticipantDto = {
   gender?: Genders;
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
-  notificationEmail?: string | null;
-  courtRole?: CourtRoles;
-  mustNotify?: boolean;
+  id: string;
 };
 export type CaseParticipantDtoRead = {
-  id?: string;
+  notificationEmail?: string | null;
+  fullName?: string | null;
+  courtRole?: CourtRoles;
+  isNotifiable?: boolean;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -601,14 +616,12 @@ export type CaseParticipantDtoRead = {
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
   genderedName?: string | null;
-  notificationEmail?: string | null;
-  fullName?: string | null;
-  courtRole?: CourtRoles;
-  isNotifiable?: boolean;
-  mustNotify?: boolean;
+  id: string;
 };
 export type CourtMemberBase = {
-  id?: string;
+  notificationEmail?: string | null;
+  courtRole?: CourtRoles;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -625,12 +638,14 @@ export type CourtMemberBase = {
   gender?: Genders;
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
-  notificationEmail?: string | null;
-  courtRole?: CourtRoles;
-  mustNotify?: boolean;
+  id: string;
 };
 export type CourtMemberBaseRead = {
-  id?: string;
+  notificationEmail?: string | null;
+  fullName?: string | null;
+  courtRole?: CourtRoles;
+  isNotifiable?: boolean;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -650,71 +665,93 @@ export type CourtMemberBaseRead = {
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
   genderedName?: string | null;
-  notificationEmail?: string | null;
-  fullName?: string | null;
-  courtRole?: CourtRoles;
-  isNotifiable?: boolean;
-  mustNotify?: boolean;
+  id: string;
 };
-export type InvoiceStatuses = 0 | 1 | 2 | 3 | 4;
+export type InvoiceStatuses =
+  | "InPreparation"
+  | "PartiallyPaid"
+  | "Paid"
+  | "Late"
+  | "Cancelled";
 export type ActivityDto = {
-  id?: string;
   created?: string;
   quantity?: number;
   description?: string | null;
   costInDollars?: number;
+  totalCost?: number;
   isDisburse?: boolean;
   isTaxable?: boolean;
   createdAt?: string;
+  id: string;
 };
 export type InvoicePaymentDto = {
-  id?: string;
   amountPaid?: number;
   amoundPaidDate?: string | null;
   isPaymentComingFromTrust?: boolean;
   method?: string | null;
+  id: string;
+};
+export type InvoiceSummation = {
+  hourlyRatesCostTotal?: number;
+  disbursesTaxableTotal?: number;
+  disbursesNonTaxableTotal?: number;
+  tpsTax?: number;
+  tvqTax?: number;
+  taxableFeesCost?: number;
+  invoiceTotal?: number;
+  paymentsTotal?: number;
+  balance?: number;
+  taxableSubtotal?: number;
 };
 export type InvoiceDto = {
-  id?: string;
   invoiceStatus?: InvoiceStatuses;
   activities?: ActivityDto[] | null;
   payments?: InvoicePaymentDto[] | null;
   availableBillingElementsForInvoice?: BillingElementDto[] | null;
+  invoiceSummation?: InvoiceSummation | null;
+  invoiceNumber?: number;
+  id: string;
 };
-export type ChamberNames = 0 | 1;
-export type CourtTypes = 0 | 1;
+export type ChamberNames = "Family" | "Youth";
+export type CourtTypes = "Superior" | "Quebec";
 export type CaseDto = {
-  id?: string;
   managerLawyer?: LawyerDto | null;
   client?: ClientDto | null;
   participants?: CaseParticipantDto[] | null;
   defender?: CourtMemberBase | null;
   plaintiff?: CourtMemberBase | null;
   invoices?: InvoiceDto[] | null;
+  clientRoleInCase?: CourtRoles;
   districtName?: string | null;
   courtAffairNumber?: string | null;
   caseNumber?: string | null;
   chamberName?: ChamberNames;
   courtTypes?: CourtTypes;
   courtNumber?: number;
+  id: string;
 };
 export type CaseDtoRead = {
-  id?: string;
   managerLawyer?: LawyerDtoRead | null;
   client?: ClientDto | null;
   participants?: CaseParticipantDtoRead[] | null;
   defender?: CourtMemberBaseRead | null;
   plaintiff?: CourtMemberBaseRead | null;
   invoices?: InvoiceDto[] | null;
+  clientRoleInCase?: CourtRoles;
   districtName?: string | null;
   courtAffairNumber?: string | null;
   caseNumber?: string | null;
   chamberName?: ChamberNames;
   courtTypes?: CourtTypes;
   courtNumber?: number;
+  id: string;
 };
 export type ClientDto = {
-  id?: string;
+  trustClientCard?: TrustClientCardDto | null;
+  cases?: CaseDto[] | null;
+  notificationEmail?: string | null;
+  courtRole?: CourtRoles;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -731,14 +768,16 @@ export type ClientDto = {
   gender?: Genders;
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
-  notificationEmail?: string | null;
-  courtRole?: CourtRoles;
-  mustNotify?: boolean;
-  trustClientCard?: TrustClientCardDto | null;
-  cases?: CaseDto[] | null;
+  id: string;
 };
 export type ClientDtoRead = {
-  id?: string;
+  trustClientCard?: TrustClientCardDto | null;
+  cases?: CaseDtoRead[] | null;
+  notificationEmail?: string | null;
+  fullName?: string | null;
+  courtRole?: CourtRoles;
+  isNotifiable?: boolean;
+  mustNotify?: boolean;
   firstName?: string | null;
   lastName?: string | null;
   postalCode?: string | null;
@@ -758,13 +797,7 @@ export type ClientDtoRead = {
   dateOfBirth?: string;
   socialSecurityNumber?: string | null;
   genderedName?: string | null;
-  notificationEmail?: string | null;
-  fullName?: string | null;
-  courtRole?: CourtRoles;
-  isNotifiable?: boolean;
-  mustNotify?: boolean;
-  trustClientCard?: TrustClientCardDto | null;
-  cases?: CaseDtoRead[] | null;
+  id: string;
 };
 export type CaseContextDto = {
   user?: UserDto | null;
@@ -775,17 +808,15 @@ export type CaseContextDtoRead = {
   user?: UserDto | null;
   lawyer?: LawyerDtoRead | null;
   clients?: ClientDtoRead[] | null;
+  cases?: CaseDtoRead[] | null;
 };
 export type GetCaseResponse = {
   createdId?: string;
 };
-export type CaseCreationInfo = {
-  clientId?: string;
-  caseNumber?: string | null;
-};
 export type AccountStatementDto = {
-  id?: string;
+  availableBillingElements?: BillingElementDto[] | null;
   invoices?: InvoiceDto[] | null;
+  id: string;
 };
 export type LoginResult = {
   token?: string | null;
@@ -806,6 +837,7 @@ export const {
   usePutCaseSavecaseMutation,
   usePutCaseUpdatelawyerMutation,
   usePutCaseAddclientMutation,
+  usePutCaseUpdateclientMutation,
   useGetCaseCreatecaseparticipantQuery,
   useGetCaseUpdatecaseparticipantQuery,
   useDeleteCaseRemovecaseparticipantMutation,

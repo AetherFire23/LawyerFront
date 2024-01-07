@@ -5,7 +5,7 @@ import { RegisterRequest } from "../../../../mercichatgpt/ProcedureMakerServer/A
 import { LoginResult } from "../../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult";
 import { UserEndpoints } from "../../../../mercichatgpt/ProcedureMakerServer/Constants/UserEndpoints";
 import { axiosInstance } from "../AxiosSlice/AxiosFun2";
-import HttpStatusCode from "../../Utils/HttpStatusCodes";
+import HttpStatusCode from "../../../../LogicFiles/Utils/HttpStatusCodes";
 
 // if not error, worked
 // actually works when you wrap that inside a try{} catch(axiosError).
