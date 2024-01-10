@@ -4,7 +4,7 @@ import {
     ActivityDto,
     usePostInvoiceCreateactivityMutation
 } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { useActivityNavigation, useNavigateToClient } from "../../../../../../../../LogicFiles/Hooks/Navigations";
+import { useNavigateToActivity, useNavigateToClient } from "../../../../../../../../LogicFiles/Hooks/Navigations";
 import Button from "@mui/material/Button";
 
 
@@ -33,12 +33,12 @@ function NonTaxableDisburse({ nonTaxable }: { nonTaxable: ActivityDto }) {
 
 
 function AddNonTaxableDisburseButton({ invoiceId }: { invoiceId: string }) {
-    const navigateToActivity = useActivityNavigation();
+    const navigateToActivity = useNavigateToActivity();
     const [triggerAddActivity, data] = usePostInvoiceCreateactivityMutation();
 
     function addActivityThenNavigate() {
         triggerAddActivity({ invoiceId: invoiceId, isDisburse: true, isTaxable: false }).unwrap().then(c => {
-            navigateToActivity(c);
+            navigateToActivity(c, invoiceId);
         });
     }
 

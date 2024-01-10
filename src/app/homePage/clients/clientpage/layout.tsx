@@ -3,6 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
 
+// i think this is completely deletable.
 // those are the TABS of the client page (invoice, cases and shit)
 export default function ClientPageLayout({ children }: { children: React.ReactNode }) {
     // could bring that into an HOC

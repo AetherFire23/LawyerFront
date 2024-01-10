@@ -1,11 +1,16 @@
 "use client";
 
-import { ActivityDto } from "../../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
+import {
+    ActivityDto,
+    usePutInvoiceRemoveactivityMutation
+} from "../../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import { DumbGetCasesSuspense } from "../../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import {
     checkActivityType,
     useActivityInitialization
 } from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/activity/activity-hooks";
+import { useNavigateToInvoicePage } from "../../../../../../../../../LogicFiles/Hooks/Navigations";
+import { useSearchParams } from "next/navigation";
 
 interface IActivityPageProps {
     activity: ActivityDto;
@@ -21,11 +26,21 @@ export default function ActivityPage() {
 }
 
 function ActivityForm() {
+    const params = useSearchParams()
+    const invoiceId = params.get("invoiceId")
+    const [triggerArchiveActivity, data] = usePutInvoiceRemoveactivityMutation();
+    const navigateToInvoice = useNavigateToInvoicePage();
     const activity = useActivityInitialization();
     if (!activity)
     {
         console.log("act w2as nul")
-        return <div> ouache</div>;
+        return <div> Loading </div>;
+    }
+
+    // I need to access the invoiceId from the activity, I guess ill just reintroduce the activityId inside the backend.
+    function archiveActivity() {
+        triggerArchiveActivity({ activityId: activity!.id });
+        navigateToInvoice(invoiceId!);
 
     }
 

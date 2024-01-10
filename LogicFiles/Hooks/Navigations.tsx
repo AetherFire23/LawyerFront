@@ -10,15 +10,6 @@ export function useNavigateToInvoicePage() {
     return navigateToInvoicePage;
 }
 
-export function useActivityNavigation() {
-    const router = useRouter();
-
-    function navigateToInvoicePage(activityId: string) {
-        router.push(`/homePage/clients/clientpage/infopage/casepage/invoicepage/activity?activityId=${activityId}`);
-    }
-
-    return navigateToInvoicePage;
-}
 
 export function useNavigateToClient() {
     const router = useRouter();
@@ -28,4 +19,17 @@ export function useNavigateToClient() {
     }
 
     return navigateToClient;
+}
+
+export function useNavigateToActivity() {
+    const router = useRouter();
+
+    function navigate(activityId: string, invoiceId: string) {
+        const baseUrl = "/homePage/clients/clientpage/infopage/casepage/invoicepage/activity";
+        const parameters = `?activityId=${activityId}&invoiceId=${invoiceId}`;
+        const route = baseUrl + parameters
+        router.push(route);
+    }
+
+    return navigate
 }

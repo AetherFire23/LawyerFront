@@ -5,7 +5,7 @@ import {
 import { RenderKeyedList } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useActivityNavigation, useNavigateToClient } from "../../../../../../../../LogicFiles/Hooks/Navigations";
+import { useNavigateToActivity, useNavigateToClient } from "../../../../../../../../LogicFiles/Hooks/Navigations";
 
 interface ITaxableDisbursesSectionProps {
     taxableDisburses: ActivityDto[],
@@ -34,12 +34,12 @@ function TaxableDisburse({ activity }: { activity: ActivityDto }) {
 }
 
 function AddTaxableDisburseButton({ invoiceId }: { invoiceId: string }) {
-    const navigateToActivity = useActivityNavigation();
+    const navigateToActivity = useNavigateToActivity();
     const [triggerAddActivity, data] = usePostInvoiceCreateactivityMutation();
 
     function addActivityThenNavigate() {
         triggerAddActivity({ invoiceId: invoiceId, isTaxable: true, isDisburse: true }).unwrap().then(activityId => {
-            navigateToActivity(activityId);
+            navigateToActivity(activityId, invoiceId);
         });
     }
 
