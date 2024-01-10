@@ -1,19 +1,13 @@
 "use client";
-import { useAppSelector } from "@/app/Redux/hooks";
 import { Container, Paper, TextField, Typography } from "@mui/material";
-import { CaseDto, ClientDto, CourtRoles, usePostCaseCreatenewcaseMutation } from "@/app/Redux/codegen/userApi2Gen";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { enhancedApi } from "@/app/Redux/codegen/enhancedApi";
-import {
-  RenderKeyedList,
-  mapFormDataToCaseDto,
-  useCaseIdSearchParam,
-  useFormReset,
-} from "./infpoage-hooks";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { mapFormDataToCaseDto, useFormReset, } from "./infpoage-hooks";
+import { useRouter, useSearchParams } from "next/navigation";
+import { CaseDto, ClientDto, CourtRoles, usePostCaseCreatenewcaseMutation } from '../../../../../../LogicFiles/Redux/codegen/userApi2Gen';
+import { useAppSelector } from "../../../../../../LogicFiles/Redux/hooks";
+import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
 
 // https://www.svgrepo.com/svg/522262/save-floppy
 
@@ -51,9 +45,7 @@ function useClientDtoSearchParam() {
 
 export default function InfoPage() {
   const clientDto = useClientDtoSearchParam()
-  const { isFetching: isFetchingCases } = enhancedApi.useGetCaseGetcasescontextQuery();
-
-  logObject("client:", clientDto);
+  const { isFetching: isFetchingCases } = enhancedApi.useGetCaseGetcasescontextQuery()
 
   return (
     <div>

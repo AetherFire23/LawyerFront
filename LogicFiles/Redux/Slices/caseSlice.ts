@@ -10,6 +10,7 @@ import { UserDto, LawyerDto, CaseContextDto, CourtRoles } from "../codegen/userA
 // Define a type for the slice state
 // Define the initial state using that type
 import { userApiGen2 } from "../codegen/userApi2Gen";
+import logObject from "../../Utils/logObject";
 const initialState: CaseContextDto = {} as any
 
 export const caseSlice = createSlice({
@@ -24,10 +25,12 @@ export const caseSlice = createSlice({
     builder.addMatcher( // update context when its received for getCases
       userApiGen2.endpoints.getCaseGetcasescontext?.matchFulfilled,
       (state, { payload: caseContext }) => {
+
+
         state.user = caseContext.user
         state.lawyer = caseContext.lawyer
         state.clients = caseContext.clients
-        console.log("Store state of cases has been updated.");
+        logObject("Store state of cases has been updated.", caseContext);
       }
     );
   },

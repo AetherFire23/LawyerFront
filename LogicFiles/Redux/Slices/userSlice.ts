@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LoginResult, UserDto } from "../codegen/userApi2Gen"
-import logObject from "../../../../LogicFiles/Utils/logObject";
+import logObject from "../../Utils/logObject";
 
 // Define the initial state using that type
 const userDto: UserDto = {

@@ -3,14 +3,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from "next/link"
 import { useRouter } from 'next/navigation'
 import { useState } from 'react';
-import { useAppDispatch } from './Redux/hooks';
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { Box, Input, Container, TextField, Typography } from '@mui/material';
 import { useLoginStorage } from '../../LogicFiles/Hooks/LocalStorage';
-import { usePutUserCredentialsloginMutation, LoginRequest, userApiGen2, UserDto, PutUserCredentialsloginApiArg, LoginResult } from './Redux/codegen/userApi2Gen';
-import { userApi2 } from './Redux/codegen/userApi2';
-import { setUser } from './Redux/Slices/userSlice';
+import { useAppDispatch } from '../../LogicFiles/Redux/hooks';
+import { LoginRequest, LoginResult, userApiGen2 } from '../../LogicFiles/Redux/codegen/userApi2Gen';
+import { setUser } from '../../LogicFiles/Redux/Slices/userSlice';
 // TODO
 // auto re-log with redux
 // date objects not serializable?
@@ -55,7 +54,7 @@ export default function Home() {
               <Button sx={{ marginTop: '1em' }} type="submit"> Login </Button>
             </form>
             <Link href={"/registerPage"}>
-              <Button  > Register </Button>
+              <Button> Register </Button>
             </Link>
             <Typography sx={{ color: 'red' }} variant="h6" component="h1">
               {isError ? "error" : ""}

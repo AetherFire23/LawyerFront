@@ -1,8 +1,8 @@
 'use client'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from "next/link"
-import { usePostUserRegisterMutation, RegisterRequest, RoleTypes } from '../Redux/codegen/userApi2Gen';
 import { Box, Button, Container, TextField } from '@mui/material';
+import { RegisterRequest, usePostUserRegisterMutation } from '../../../LogicFiles/Redux/codegen/userApi2Gen';
 
 export default function RegisterPage() {
     const [triggerRegister, { isLoading, isError, isSuccess }] = usePostUserRegisterMutation()

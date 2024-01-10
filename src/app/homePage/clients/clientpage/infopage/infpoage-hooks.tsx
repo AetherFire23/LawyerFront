@@ -1,10 +1,8 @@
-import { enhancedApi } from "@/app/Redux/codegen/enhancedApi"
-import { CaseDto, ClientDto } from "@/app/Redux/codegen/userApi2Gen"
-import { produce } from "immer"
-import next from "next"
-import { useSearchParams } from "next/navigation"
-import { useState } from "react"
-import { FieldValues, SubmitHandler, UseFormReset } from "react-hook-form"
+import { produce } from "immer";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { FieldValues, UseFormReset } from "react-hook-form";
+import { ClientDto } from "../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 
 export function useCaseIdSearchParam() {
     const searchParams = useSearchParams()
@@ -25,7 +23,7 @@ export function mapFormDataToCaseDto(clientDto: ClientDto, formData: ClientDto):
 
 // if I dont do reset state, the formdata will get the empty clientDto and keep it first.
 // that why is works when navigating but not when refreshing.
-// absolutely necessary it seems. 
+// absolutely necessary it seems.
 /** Used when the default form value must be overriden when a condition is met
  */
 export function useFormReset<T extends FieldValues>(mustReset: boolean, obj: T, reset: UseFormReset<T>) {

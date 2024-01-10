@@ -1,75 +1,75 @@
-'use client'
-import { useAppSelector } from '@/app/Redux/hooks'
-import { useRouter } from 'next/navigation';
-import styles from './cardHover.module.css'
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-import useStoreUserFromLocalStorage from '../../../../../LogicFiles/Hooks/useGetCasesLocal';
-import { CaseDto, ClientDto, useGetCaseGetcasescontextQuery } from '@/app/Redux/codegen/userApi2Gen';
-import { GetCases } from '../../../../../LogicFiles/TypeScriptExtensions/CaseContextDtoExtensions';
-import { Button } from '@mui/material';
-export default function FindClientPage() {
-    const caseSlice = useAppSelector(s => s.userSlice.userDto)
+"use client";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import useStoreUserFromLocalStorage from "../../../../../LogicFiles/Hooks/useGetCasesLocal";
+import { Button } from "@mui/material";
+import { ClientDto, useGetCaseGetcasescontextQuery } from "../../../../../LogicFiles/Redux/codegen/userApi2Gen";
+import { useNavigateToClient } from "../../../../../LogicFiles/Hooks/Navigations";
+import { useAppSelector } from "../../../../../LogicFiles/Redux/hooks";
+import { Client } from "undici-types";
+import KeyedList from "../../../../../LogicFiles/Components/KeyedList";
 
-    useStoreUserFromLocalStorage()
-    const { isError, isFetching, data: caseContext } = useGetCaseGetcasescontextQuery()
+export default function FindClientPage() {
+    const caseSlice = useAppSelector(s => s.userSlice.userDto);
+
+    useStoreUserFromLocalStorage();
+    const { isError, isFetching, data: caseContext } = useGetCaseGetcasescontextQuery();
 
     return (
         <div>
-            <Button> Add Client </Button>
-            {/* {(!isError && !isFetching) && <CaseList caseDtos={GetCases(caseContext)} />} */}
         </div>
-    )
+    );
 }
 
-interface IClientListProps {
-    clients: ClientDto[]
-}
+function ClientList({ clients }: { clients: ClientDto[] }) {
 
-function ClientList({ clients }: IClientListProps) {
+    const renderer = (client: ClientDto) => (<ClientSummary client={client}/>)
     return (
         <Container>
             <Box>
-                <Stack direction='row' justifyContent='center' alignContent='center' >
-                    <ul>
-                        {clients?.map(c => (
-                            <li key={c.id}>
-                                <ClientSummary client={c} />
-                            </li>
-                        ))}
-                    </ul>
+                <Stack direction="row" justifyContent="center" alignContent="center">
+                    <KeyedList list={clients!} renderer={renderer}/>
+
+                    {/* <ul> */}
+                    {/*     {clients?.map(c => ( */}
+                    {/*         <li key={c.id}> */}
+                    {/*             <ClientSummary client={c}/> */}
+                    {/*         </li> */}
+                    {/*     ))} */}
+                    {/* </ul> */}
                 </Stack>
             </Box>
         </Container>
-    )
+    );
 }
 
 interface IClientSummaryProps {
-    client: ClientDto
+    client: ClientDto;
 }
+
 function ClientSummary({ client }: IClientSummaryProps) {
-    const router = useRouter()
+    const navigateToClient = useNavigateToClient();
 
     function navigateToClientPage(e: any) {
-        router.push(`/homePage/clients/clientpage/infopage?clientId=${client.id}`)
+        navigateToClient(client.id);
     }
 
     return (
         <div>
             <div onClick={navigateToClientPage}>
                 <Card>
-                    <Box sx={{ margin: "2rem", padding: '2rem' }}>
-                        <Stack alignContent={'center'} justifyItems='center'>
-                            <Typography alignItems={'center'} justifyContent={'center'}> Test </Typography>
+                    <Box sx={{ margin: "2rem", padding: "2rem" }}>
+                        <Stack alignContent={"center"} justifyItems="center">
+                            <Typography alignItems={"center"} justifyContent={"center"}> Test </Typography>
                         </Stack>
                     </Box>
                 </Card>
-            </div >
+            </div>
         </div>
-    )
+    );
 }
 
 // interface ICaseListProps {

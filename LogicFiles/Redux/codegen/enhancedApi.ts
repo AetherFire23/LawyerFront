@@ -25,9 +25,9 @@ export const enhancedApi = userApiGen2.enhanceEndpoints({
         },
         postInvoiceCreateactivity: {
             invalidatesTags: caseTag
-        }
-            
-        
+        },
+
+
     }
 })
 

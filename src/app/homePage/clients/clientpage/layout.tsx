@@ -1,16 +1,11 @@
-'use client'
-import { useSearchParams } from 'next/navigation'
-import React, { useState } from "react"
-import Stack from '@mui/material/Stack'
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { useRouter } from 'next/navigation'
+"use client";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 
 
 // those are the TABS of the client page (invoice, cases and shit)
 export default function ClientPageLayout({ children }: { children: React.ReactNode }) {
-    // could bring that into an HOC 
+    // could bring that into an HOC
     console.log("am I inside clientPage")
     const router = useRouter()
     const [active, setActive] = useState(0)

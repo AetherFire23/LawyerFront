@@ -1,100 +1,52 @@
-'use client'
+"use client";
 
-import { useAppSelector } from "@/app/Redux/hooks";
-import { useSearchParams } from "next/navigation";
-import { GetCases } from "../../../../../../../../LogicFiles/TypeScriptExtensions/CaseContextDtoExtensions";
-import { isValidArray } from "../../../../../../../../LogicFiles/TypeScriptExtensions/ArrayExtensions";
-import { ActivityDto, InvoiceDto, useGetCaseGetcasescontextQuery, usePostInvoiceCreateactivityMutation } from "@/app/Redux/codegen/userApi2Gen";
-import { DumbGetCasesSuspense } from "../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
-import useStoreUserFromLocalStorage from "../../../../../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { Container, Typography } from "@mui/material";
-import { act } from "react-dom/test-utils";
-import { Button } from '@mui/material'
-import { useRouter } from "next/navigation";
+import {
+    DumbGetCasesSuspense,
+    DumbGetCasesSuspense2
+} from "../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
+import { Container } from "@mui/material";
+import { InvoiceDto } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
+import HourlyActivitiesSection
+    from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/HourlyActivitiesSection";
+import {
+    useInvoiceDtoFromSearchParam
+} from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/invoice-hooks";
+import TaxableDisbursesSection
+    from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/TaxableDisbursesSection";
+import NonTaxableDisbursesSection
+    from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/NonTaxableDisbursesSection";
+import SummationSection from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/SummationSection";
+import DownloadInvoiceButton
+    from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/DownloadInvoiceButton";
 
-function useInvoiceDtoFromSearchParam() {
-    useStoreUserFromLocalStorage()
-    const params = useSearchParams()
-    const invoiceId = params.get('invoiceId')
-    const caseCtx = useAppSelector(c => c.caseSlice)
-    const cases = GetCases(caseCtx)
-    const invoices = cases?.flatMap(c => c.invoices)
-    const invoiceDto = isValidArray(invoices)
-        ? invoices.find(i => i?.id === invoiceId)
-        : {} as InvoiceDto
 
-    return invoiceDto;
-}
+// will consider making a context to inject the current invoice at this point.
 
 export default function InvoicePage() {
-    const invoiceDto = useInvoiceDtoFromSearchParam()
-
-    // ds le backend jva amener le invoice summary dans le invoiceDto
-    // et faire le mutual dependency thing 
+    const invoiceDto = useInvoiceDtoFromSearchParam();
     return (
-        <DumbGetCasesSuspense>
+        <DumbGetCasesSuspense2 condition={invoiceDto}>
             <label> invoice page</label>
-            <InvoiceDetails invoice={invoiceDto!} />
-        </DumbGetCasesSuspense>
-    )
+            <InvoiceDetails invoice={invoiceDto!}/>
+        </DumbGetCasesSuspense2>
+    );
 }
 
 // InvoiceDetails
 function InvoiceDetails({ invoice }: { invoice: InvoiceDto }) {
     return (
-        <Container sx={{ width: '50vw' }}>
-            <HourlyActivities activities={invoice.activities} />
+        <Container sx={{ width: "50vw" }}>
+            <HourlyActivitiesSection hourlyActivities={invoice.hourlyActivities} invoiceId={invoice.id}/>
+            <TaxableDisbursesSection taxableDisburses={invoice.taxableDisburses!} invoiceId={invoice.id}/>
+            <NonTaxableDisbursesSection nonTaxables={invoice.nonTaxableDisburses!} invoiceId={invoice.id}/>
+            <SummationSection invoiceSummation={invoice.invoiceSummation!}/>
+            <DownloadInvoiceButton invoiceId={invoice.id}/>
         </Container>
-    )
+    );
 }
 
 
 // HourlyActivities
-function HourlyActivities({ activities, activityId }: { activities: ActivityDto[] | null | undefined, activityId: string }) {
-    const isValid = isValidArray(activities)
-    return (
-        <div>
-            <ul>
-                {isValid && (activities?.map(c => (
-                    <li key={c.id}>
-                        <HourlyActivity activity={c} />
-                    </li>
-                )))}
-            </ul>
-
-            <AddActivityButton invoiceId={activityId} />
-        </div>
-    )
-}
-
-function HourlyActivity({ activity }: { activity: ActivityDto }) {
-
-    return (
-        <>
-            <Typography> {activity.createdAt} </Typography>
-            <Typography> {activity.description} </Typography>
-            <Typography> {activity.costInDollars} </Typography>
-            <Typography> {activity.quantity} </Typography>
-            <Typography> {activity.totalCost} </Typography>
-        </>
-    )
-}
-
-function AddActivityButton({ invoiceId }: { invoiceId: string }) {
-    const router = useRouter()
-    const [triggerAddActivity, data] = usePostInvoiceCreateactivityMutation()
-
-    function addActivity() {
-        triggerAddActivity({ invoiceId: invoiceId }).unwrap().then(c => {
-            router.push(`/homePage/clients/clientpage/infopage/casepage/invoicepage/activity?invoiceId=${invoiceId}`)
-        })
-    }
-    return (
-        <>
-            <Button onClick={addActivity}> Add Activity </Button>
-        </>
-    )
-}
 
 // Disburses
 

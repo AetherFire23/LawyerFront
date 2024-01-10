@@ -150,7 +150,11 @@ const injectedRtkApi = api.injectEndpoints({
       query: (queryArg) => ({
         url: `/invoice/createactivity`,
         method: "POST",
-        params: { invoiceId: queryArg.invoiceId },
+        params: {
+          invoiceId: queryArg.invoiceId,
+          isDisburse: queryArg.isDisburse,
+          isTaxable: queryArg.isTaxable,
+        },
       }),
     }),
     putInvoiceUpdateactivity: build.mutation<
@@ -399,6 +403,8 @@ export type PostInvoiceCreateactivityApiResponse =
   /** status 200 Success */ string;
 export type PostInvoiceCreateactivityApiArg = {
   invoiceId?: string;
+  isDisburse?: boolean;
+  isTaxable?: boolean;
 };
 export type PutInvoiceUpdateactivityApiResponse = unknown;
 export type PutInvoiceUpdateactivityApiArg = {
@@ -673,17 +679,6 @@ export type InvoiceStatuses =
   | "Paid"
   | "Late"
   | "Cancelled";
-export type ActivityDto = {
-  created?: string;
-  quantity?: number;
-  description?: string | null;
-  costInDollars?: number;
-  totalCost?: number;
-  isDisburse?: boolean;
-  isTaxable?: boolean;
-  createdAt?: string;
-  id: string;
-};
 export type InvoicePaymentDto = {
   amountPaid?: number;
   amoundPaidDate?: string | null;
@@ -703,12 +698,26 @@ export type InvoiceSummation = {
   balance?: number;
   taxableSubtotal?: number;
 };
+export type ActivityDto = {
+  created?: string;
+  quantity?: number;
+  description?: string | null;
+  costInDollars?: number;
+  totalCost?: number;
+  isDisburse?: boolean;
+  isTaxable?: boolean;
+  createdAt?: string;
+  id: string;
+};
 export type InvoiceDto = {
   invoiceStatus?: InvoiceStatuses;
-  activities?: ActivityDto[] | null;
   payments?: InvoicePaymentDto[] | null;
   availableBillingElementsForInvoice?: BillingElementDto[] | null;
   invoiceSummation?: InvoiceSummation | null;
+  activities?: ActivityDto[] | null;
+  hourlyActivities?: ActivityDto[] | null;
+  taxableDisburses?: ActivityDto[] | null;
+  nonTaxableDisburses?: ActivityDto[] | null;
   invoiceNumber?: number;
   id: string;
 };

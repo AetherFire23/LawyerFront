@@ -1,12 +1,10 @@
 import { useEffect } from "react";
-import { setUser } from "../../src/app/Redux/Slices/userSlice";
-import { useAppDispatch, useAppSelector } from "../../src/app/Redux/hooks";
-import { LoginResult, useGetCaseGetcasescontextQuery } from "../../src/app/Redux/codegen/userApi2Gen";
-import { userApiGen2 } from "../../src/app/Redux/codegen/userApi2Gen";
 import logObject from "../Utils/logObject";
-// This will allow the automatic re-fetch of getcases in case the page gets loaded.
-// uses the token stored inside the window
-
+import { useAppDispatch } from '../Redux/hooks';
+import { LoginResult } from "../Redux/codegen/userApi2Gen";
+import { setUser } from "../Redux/Slices/userSlice";
+/** This loads the user from the browser local storage in case the page gets loaded.
+ * This will later allow the getCases query to be authorized when needed. */
 export default function useStoreUserFromLocalStorage() {
     const dispatch = useAppDispatch()
     // useEffect to ensure the window exists
