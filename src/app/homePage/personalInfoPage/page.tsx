@@ -8,53 +8,80 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import { LawyerDto, usePutCaseUpdatelawyerMutation } from "../../../../LogicFiles/Redux/codegen/userApi2Gen";
+import {
+    LawyerDto,
+} from "../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import { useAppSelector } from "../../../../LogicFiles/Redux/hooks";
 import { mapFormDataToLawyerDto } from "@/app/homePage/personalInfoPage/personal-info-hooks";
+import { useFormReset } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
+import {  DumbSuspenseCondition } from "../../../../LogicFiles/Components/DumbGetCasesSusense";
+import useStoreUserFromLocalStorage from "../../../../LogicFiles/Hooks/useGetCasesLocal";
+import { enhancedApi } from "../../../../LogicFiles/Redux/codegen/enhancedApi";
 
 export default function PersonalInfoPage() {
-
+    useStoreUserFromLocalStorage();
+    const{isSuccess} = enhancedApi.useGetCaseGetcasescontextQuery()
     return (
-        <Container>
-            <Box>
-                <Stack direction="column">
-                    <Typography> Lawyer information </Typography>
-                    <PersonalInfoForm/>
-                </Stack>
-            </Box>
-        </Container>
+        <DumbSuspenseCondition condition={isSuccess}>
+            <Container>
+                <Box>
+                    <Stack direction="column">
+                        <Typography> Lawyer information </Typography>
+                        <PersonalInfoForm/>
+                    </Stack>
+                </Box>
+            </Container>
+        </DumbSuspenseCondition>
     );
 }
 
+// is there any way I can ensure this doesnt get rendered or run ?
 function PersonalInfoForm() {
-    const { register, handleSubmit, watch, formState: { errors }, control } = useForm<LawyerDto>();
-    const lawyer = useAppSelector(c => c.caseSlice.lawyer);
-    const [triggerSave, data] = usePutCaseUpdatelawyerMutation();
+    const lawyer = useAppSelector(c => c.caseSlice.lawyer) as LawyerDto;
+    const [triggerSave, data] = enhancedApi.usePutCaseUpdatelawyerMutation();
+    const { isSuccess } = enhancedApi.useGetCaseGetcasescontextQuery();
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<LawyerDto>({ defaultValues: lawyer });
+
+    useFormReset(isSuccess, lawyer, reset);
+
     const onSubmit: SubmitHandler<LawyerDto> = async (lawyerForm) => {
         const updatedLawyer = mapFormDataToLawyerDto(lawyer!, lawyerForm);
+        console.log(updatedLawyer);
 
+        triggerSave({ body: updatedLawyer });
+        // lets try to manual refetch just to see if automated refetching simply just sucks ass
     };
 
     return (
         <Stack>
-            <form className="p-5 card flex flex-col items-center items justify-start bg-neutral"
+            <form autoComplete={"new-password"}
+                className="p-5 card flex flex-col items-center items justify-start bg-neutral"
                   onSubmit={handleSubmit(onSubmit)}>
-                <TextField id="standard-basic" label="UserName" variant="standard"
+
+                <TextField
+                    autoComplete={"off"}
+                    id="standard-basic" label="email" variant="standard"
+                    className="input mb-5 input-bordered"
+                    {...register("email", {})} />
+
+                <TextField id="standard-basic" label="address" variant="standard"
                            className="input mb-5 input-bordered"
-                           defaultValue={isSuccessGetCases ? caseContext?.lawyer.firstName : ""} {...register("address", {})} />
-                <TextField id="standard-basic" label="UserName" variant="standard"
+                           {...register("address", {})} />
+
+                <TextField id="standard-basic" label="first name" variant="standard"
                            className="input mb-5 input-bordered"
-                           defaultValue={isSuccessGetCases ? caseContext.lawyer.lastName : ""} {...register("firstName", {})} />
-                <TextField id="standard-basic" label="UserName" variant="standard"
+                           {...register("firstName", {})} />
+
+                <TextField id="standard-basic" label="last name" variant="standard"
                            className="input mb-5 input-bordered"
-                           defaultValue="" {...register("postalCase", {})} />
-                <TextField id="standard-basic" label="UserName" variant="standard"
+                           {...register("lastName", {})} />
+
+                <TextField id="standard-basic" label="mobile number" variant="standard"
                            className="input mb-5 input-bordered"
-                           defaultValue="" {...register("address", {})} />
-                <TextField id="standard-basic" label="UserName" variant="standard"
-                           className="input mb-5 input-bordered"
-                           defaultValue="" {...register("mobilePhoneNumber", {})} />
-                <Button variant="outlined" type="submit"> Save </Button>
+                           {...register("mobilePhoneNumber", {})} />
+
+                <Button type="submit"> Save </Button>
             </form>
         </Stack>
     );

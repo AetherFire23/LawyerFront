@@ -1,10 +1,8 @@
 import { userApiGen2 } from "./userApi2Gen";
-
-
 // ostie que ca devient compliexe.
 // en tout cas, faut caller cet api-la pour que ca marche.
 
-const caseTag = ['Case']
+const caseTag = ["Case"];
 export const enhancedApi = userApiGen2.enhanceEndpoints({
     addTagTypes: caseTag,
     endpoints: {
@@ -26,8 +24,23 @@ export const enhancedApi = userApiGen2.enhanceEndpoints({
         postInvoiceCreateactivity: {
             invalidatesTags: caseTag
         },
+        putCaseUpdatelawyer: {
+            invalidatesTags: caseTag
+        },
+        putInvoiceUpdateactivity: {
+            invalidatesTags: caseTag
+        },
+        putInvoiceArchiveinvoice: {
+            invalidatesTags: caseTag
+        },
+        putInvoiceRemoveactivity: {
+            invalidatesTags: caseTag
+        },
+        putCaseSavecase: {
+            invalidatesTags: caseTag
+        },
 
 
     }
-})
+});
 

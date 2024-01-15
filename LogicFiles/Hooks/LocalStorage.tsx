@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { LoginResult } from "../../../mercichatgpt/ProcedureMakerServer/Authentication/ReturnModels/LoginResult"
+import { LoginResult } from "../Redux/codegen/userApi2Gen";
 
 export enum StorageTypes {
   jwtToken,
@@ -16,7 +16,7 @@ export interface GetSetLocalValue {
 //  In layout of homePage, do the getcasesquery
 
 export function useLocalStorage(): GetSetLocalValue | null {
-  
+
   const getLocalValue: <T>(key: StorageTypes) => T = <T,>(key: StorageTypes) => {
     const storedValue: string = window.localStorage.getItem(key.toString()) ?? ""
     const parsedStoredValue = JSON.parse(storedValue) as T

@@ -1,11 +1,11 @@
 import {
     ActivityDto,
-    usePostInvoiceCreateactivityMutation
 } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import { RenderKeyedList } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
-import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useNavigateToActivity, useNavigateToClient } from "../../../../../../../../LogicFiles/Hooks/Navigations";
+import ActivitySummary from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/ActivitySummary";
+import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
+import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
 
 interface ITaxableDisbursesSectionProps {
     taxableDisburses: ActivityDto[],
@@ -15,7 +15,7 @@ interface ITaxableDisbursesSectionProps {
 export default function TaxableDisbursesSection({ taxableDisburses, invoiceId }: ITaxableDisbursesSectionProps) {
     if (!taxableDisburses) return <div></div>;
 
-    const taxableDisburseRenderer = (a: ActivityDto) => (<TaxableDisburse activity={a}/>);
+    const taxableDisburseRenderer = (a: ActivityDto) => (<ActivitySummary activity={a} invoiceId={invoiceId}/>);
     return (
         <div>
             <h1> taxable disburses section </h1>
@@ -24,18 +24,9 @@ export default function TaxableDisbursesSection({ taxableDisburses, invoiceId }:
         </div>
     );
 }
-
-function TaxableDisburse({ activity }: { activity: ActivityDto }) {
-    return (
-        <>
-            <Typography> Supposed to be a taxable disburse summary hereg </Typography>
-        </>
-    );
-}
-
 function AddTaxableDisburseButton({ invoiceId }: { invoiceId: string }) {
-    const navigateToActivity = useNavigateToActivity();
-    const [triggerAddActivity, data] = usePostInvoiceCreateactivityMutation();
+    const { navigateToActivity } = useNavigations()
+    const [triggerAddActivity, data] = enhancedApi.usePostInvoiceCreateactivityMutation();
 
     function addActivityThenNavigate() {
         triggerAddActivity({ invoiceId: invoiceId, isTaxable: true, isDisburse: true }).unwrap().then(activityId => {

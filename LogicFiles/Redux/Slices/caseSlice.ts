@@ -36,5 +36,5 @@ export const caseSlice = createSlice({
   },
 });
 
-export const { } = caseSlice.actions;
+export const {  } = caseSlice.actions;
 export default caseSlice.reducer;

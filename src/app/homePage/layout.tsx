@@ -18,8 +18,8 @@ export default function HomeLayout({
 }: {
     children: React.ReactNode
 }) {
-    const cdt: CaseDto[] = [];
-    useStoreUserFromLocalStorage();
+    // const cdt: CaseDto[] = [];
+    // useStoreUserFromLocalStorage();
     // const userSlice = useAppSelector(state => state.userSlice)
     // const dispatch = useAppDispatch()
     // useEffect(() => {
@@ -37,9 +37,9 @@ export default function HomeLayout({
     return (
         <div>
             <AppBarContainer>
-                <LawyerAppButton/>
-                <PersonalInfoButton/>
-                <ClientsMenuDropDown/>
+                <LawyerAppButton />
+                <PersonalInfoButton />
+                <ClientsSearchButton />
             </AppBarContainer>
             {children}
         </div>
@@ -73,27 +73,38 @@ function LawyerAppButton() {
 
 function PersonalInfoButton() {
     return (
-    <Link href="/homePage/personalInfoPage">
-        <Button variant="outlined" sx={{ width: "6rem", marginRight: "1rem" }}>
-            Personal
-        </Button>
-    </Link>);
+        <Link href="/homePage/personalInfoPage">
+            <Button variant="outlined" sx={{ width: "6rem", marginRight: "1rem" }}>
+                Personal
+            </Button>
+        </Link>);
 }
 
-function ClientsMenuDropDown() {
-    const router = useRouter();
-    const [triggerAddClient, data] = enhancedApi.usePutCaseAddclientMutation();
-
-    function addClientThenRedirect() {
-        triggerAddClient().unwrap().then(r => {
-            router.push(`/homePage/clients/clientpage/infopage?clientId=${r}`);
-        });
-    }
-
-    return (<AppBarMenu buttonText="clients">
-        <Link href="/homePage/clients/findclient">
-            <MenuItem sx={{ width: "6rem" }}> Find </MenuItem>
-        </Link>
-        <MenuItem onClick={addClientThenRedirect}> Add </MenuItem>
-    </AppBarMenu>);
+function ClientsSearchButton() {
+    return (
+            <Link href="/homePage/clients/findclient">
+                <Button variant="outlined" sx={{ width: "6rem", marginRight: "1rem" }}>
+                    Clients
+                </Button>
+            </Link>
+    );
 }
+
+
+// function ClientsMenuDropDown() {
+//     const router = useRouter();
+//     const [triggerAddClient, data] = enhancedApi.usePutCaseAddclientMutation();
+//
+//     function addClientThenRedirect() {
+//         triggerAddClient().unwrap().then(r => {
+//             router.push(`/homePage/clients/clientpage/infopage?clientId=${r}`);
+//         });
+//     }
+//
+//     return (<AppBarMenu buttonText="clients">
+//         <Link href="/homePage/clients/findclient">
+//             <MenuItem sx={{ width: "6rem" }}> Find </MenuItem>
+//         </Link>
+//         <MenuItem onClick={addClientThenRedirect}> Add </MenuItem>
+//     </AppBarMenu>);
+// }

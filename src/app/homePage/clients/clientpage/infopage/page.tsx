@@ -1,195 +1,44 @@
 "use client";
-import { Container, Paper, TextField, Typography } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
-import Button from "@mui/material/Button";
+import { useClientDtoSearchParam, } from "./infpoage-hooks";
+import { DumbSuspenseCondition } from "../../../../../../LogicFiles/Components/DumbGetCasesSusense";
+import ClientForm from "@/app/homePage/clients/clientpage/infopage/_components/ClientForm";
+import CasesNavList from "@/app/homePage/clients/clientpage/infopage/_components/CasesNavList";
+import CreateCaseButton from "@/app/homePage/clients/clientpage/infopage/_components/CreateCaseButton";
 import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { mapFormDataToCaseDto, useFormReset, } from "./infpoage-hooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-    CaseDto,
-    ClientDto,
-    CourtRoles,
-    usePostCaseCreatenewcaseMutation
-} from "../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { useAppSelector } from "../../../../../../LogicFiles/Redux/hooks";
 import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
 
 // https://www.svgrepo.com/svg/522262/save-floppy
 
-// workaround to oazapfts implementation in rtk query codegen
-// not generating typescript enums and using sting union types instead.
-// More precisely, the string argument is ensured to be included inside the code-generated union type
-// function ensureCase<TUnion extends string>(op: TUnion) {
-//     return op
-// }
-
-function logObject(message: string, obj: any) {
-    console.log(message);
-    console.log(obj);
-}
-
-function ensureCourtRole(op: CourtRoles) {
-    return op;
-}
-
-function useClientDtoSearchParam() {
-    useStoreUserFromLocalStorage();
-    const searchParams = useSearchParams();
-    const caseId = searchParams.get("clientId");
-    const clients = useAppSelector((s) => s.caseSlice.clients);
-
-    // need this cast as clientDto to avoid
-    // feeding undefined to the react hook form library and therefore
-    // I avoid a null exception
-    const clientDto = clients
-        ? (clients.find((c) => c.id === caseId) as ClientDto)
-        : ({} as ClientDto);
-
-    return clientDto;
-}
-
 export default function InfoPage() {
+    useStoreUserFromLocalStorage();
+    const data = enhancedApi.useGetCaseGetcasescontextQuery();
     const clientDto = useClientDtoSearchParam();
-    const { isFetching: isFetchingCases } = enhancedApi.useGetCaseGetcasescontextQuery();
-
+    console.log(data)
     return (
-        <div>
-            {isFetchingCases && <div> fetching cases... </div>}
-            {!isFetchingCases && (
+        <DumbSuspenseCondition condition={data.isSuccess && !data.isFetching && !!clientDto}>
+            <label> am i loaded?</label>
+            {clientDto && (
                 <div>
                     <h1> infopage </h1>
-                    <ClientForm clientDto={clientDto}/>
-                    <ClientCasesList clientDto={clientDto}/>
+                    <ClientForm clientDto={clientDto!}/>
+                    <CasesNavList clientDto={clientDto!}/>
+                    <CreateCaseButton clientId={clientDto!.id}/>
                 </div>
             )}
-        </div>
-    );
-}
 
-function ClientForm({ clientDto }: { clientDto: ClientDto }) {
-    const { isFetching: isFetchingCases, isSuccess: isSuccessCases } = enhancedApi.useGetCaseGetcasescontextQuery();
-    const [triggerUpdateClient,] = enhancedApi.usePutCaseUpdateclientMutation();
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-        control,
-        reset,
-    } = useForm<ClientDto>({ defaultValues: clientDto, });
-    useFormReset(isSuccessCases, clientDto, reset);
-
-    const onSubmitClientUpdate: SubmitHandler<ClientDto> = async (caseDtoFormData) => {
-        console.log("submitting client");
-        const nextClientDto = mapFormDataToCaseDto(clientDto, caseDtoFormData);
-        triggerUpdateClient({ body: nextClientDto });
-    };
-
-    return (
-        <form onSubmit={handleSubmit(onSubmitClientUpdate)}>
-            <Container
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "25vw",
-                }}
-            >
-                <Button type="submit"> Save </Button>
-                {/* <FormTextField additionalProps={register("address", {})} /> */}
-                <TextField
-                    {...register("address", {})}
-                    id="standard-basic"
-                    label="adresse"
-                    variant="outlined"
-                    className="input mb-5 input-bordered"
-                    defaultValue=""
-                />
-                <TextField
-                    {...register("firstName", {})}
-                    id="standard-basic"
-                    label="firstName"
-                    variant="outlined"
-                    className="input mb-5 input-bordered"
-                    defaultValue=""
-                />
-                <TextField
-                    {...register("lastName", {})}
-                    id="standard-basic"
-                    label="lastName"
-                    variant="outlined"
-                    className="input mb-5 input-bordered"
-                    defaultValue=""
-                />
-                <TextField {...register("email", {})} id="standard-basic" label="email" variant="outlined"
-                           className="input mb-5 input-bordered" defaultValue=""
-                />
-            </Container>
-        </form>
-    );
-}
-
-function ClientCasesList({ clientDto }: { clientDto: ClientDto }) {
-
-    logObject("those are the caseDtos of the client:", clientDto.cases);
-    const canRenderCases = clientDto.cases && Object.keys(clientDto.cases).length !== 0;
-    return (
-        <Container
-            sx={{
-                width: "25vw",
-            }}>
-            <AddCaseButton clientId={clientDto.id}/>
-
-            <ul>
-                {canRenderCases && clientDto.cases?.map(c => (
-                    <li key={c.id}>
-                        <ClientCaseCard caseDto={c}/>
-                    </li>
-                ))}
-            </ul>
-        </Container>
-    );
-}
-
-function ClientCaseCard({ caseDto }: { caseDto: CaseDto }) {
-    logObject(`caseCard: `, caseDto);
-    const navigate = useNavigateToCase();
-    return (
-        <Paper
-            elevation={3}
-            sx={{}}
-            onClick={() => navigate(caseDto.id)}
-        >
-            <Typography> {caseDto.chamberName} </Typography>
-        </Paper>
-    );
-}
-
-function AddCaseButton({ clientId }: { clientId: string }) {
-    const [triggerAddCase, queryData] = usePostCaseCreatenewcaseMutation();
-    const navigate = useNavigateToCase();
-
-    function addCaseAndNavigate() {
-        triggerAddCase({ clientId: clientId }).unwrap().then(caseid => {
-            navigate(caseid.createdId!);
-        });
-    }
-
-    return (
-        <Button onClick={addCaseAndNavigate}> Add Case </Button>
-    );
-}
-
-function useNavigateToCase() {
-    const router = useRouter();
-
-    function navigate(caseId: string) {
-        router.push(`/homePage/clients/clientpage/infopage/casepage?caseId=${caseId}`);
-    }
-
-    return navigate;
+        </DumbSuspenseCondition>);
 }
 
 
+// function useNavigateToCase() {
+//     const router = useRouter();
+
+//     function navigate(caseId: string) {
+//         router.push(`/homePage/clients/clientpage/infopage/casepage?caseId=${caseId}`);
+//     }
+
+//     return navigate;
+// }
 
 
 {

@@ -1,8 +1,7 @@
 "use client";
 
 import {
-    DumbGetCasesSuspense,
-    DumbGetCasesSuspense2
+    DumbSuspenseCondition
 } from "../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import { Container } from "@mui/material";
 import { InvoiceDto } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
@@ -24,11 +23,12 @@ import DownloadInvoiceButton
 
 export default function InvoicePage() {
     const invoiceDto = useInvoiceDtoFromSearchParam();
+
     return (
-        <DumbGetCasesSuspense2 condition={invoiceDto}>
+        <DumbSuspenseCondition condition={!!invoiceDto}>
             <label> invoice page</label>
             <InvoiceDetails invoice={invoiceDto!}/>
-        </DumbGetCasesSuspense2>
+        </DumbSuspenseCondition>
     );
 }
 

@@ -276,6 +276,15 @@ const injectedRtkApi = api.injectEndpoints({
         params: { invoiceId: queryArg.invoiceId },
       }),
     }),
+    getInvoiceGetinvoice2: build.query<
+      GetInvoiceGetinvoice2ApiResponse,
+      GetInvoiceGetinvoice2ApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/invoice/getinvoice2`,
+        params: { invoiceId: queryArg.invoiceId },
+      }),
+    }),
     postNotificationNotifypdf: build.mutation<
       PostNotificationNotifypdfApiResponse,
       PostNotificationNotifypdfApiArg
@@ -454,6 +463,10 @@ export type PutInvoiceRemoveinvoicepaymentApiArg = {
 };
 export type GetInvoiceGetinvoiceApiResponse = /** status 200 Success */ Blob;
 export type GetInvoiceGetinvoiceApiArg = {
+  invoiceId?: string;
+};
+export type GetInvoiceGetinvoice2ApiResponse = unknown;
+export type GetInvoiceGetinvoice2ApiArg = {
   invoiceId?: string;
 };
 export type PostNotificationNotifypdfApiResponse =
@@ -870,6 +883,7 @@ export const {
   usePutInvoiceUpdateinvoicepaymentMutation,
   usePutInvoiceRemoveinvoicepaymentMutation,
   useGetInvoiceGetinvoiceQuery,
+  useGetInvoiceGetinvoice2Query,
   usePostNotificationNotifypdfMutation,
   usePutUserCredentialsloginMutation,
   usePostUserTokenloginMutation,

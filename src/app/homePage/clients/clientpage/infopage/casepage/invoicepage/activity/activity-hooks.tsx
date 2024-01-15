@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useAppSelector } from "../../../../../../../../../LogicFiles/Redux/hooks";
 import { ActivityDto } from "../../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import logObject from "../../../../../../../../../LogicFiles/Utils/logObject";
+import { produce } from "immer";
 
 export type ActivityType = "HourlyActivity" | "TaxableDisburse" | "NonTaxableDisburse"
 
@@ -15,10 +16,21 @@ export function useActivityInitialization() {
     const activities = caseSlice!.clients!.flatMap(c => c.cases)!.flatMap(c => c!.invoices)!.flatMap(c => c!.activities);
     const activityParameter = activities
         ? activities.find(a => a!.id === activityId)
-        : {} as ActivityDto | null | undefined
+        : {} as ActivityDto | null | undefined;
 
     logObject("was this null when page loaded", activityParameter);
     return activityParameter;
+}
+
+
+export function mapFormDataToActivity(activity: ActivityDto, formActivity: ActivityDto) {
+    const modifiedActivity = produce(activity, activityDraft => {
+        activityDraft.costInDollars = formActivity.costInDollars;
+        activityDraft.quantity = formActivity.quantity;
+        activityDraft.description = formActivity.description;
+    });
+
+    return modifiedActivity;
 }
 
 // should be done server side lolzida

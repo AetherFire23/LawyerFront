@@ -3,14 +3,37 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, UseFormReset } from "react-hook-form";
 import { ClientDto } from "../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-
+import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
+import { useAppSelector } from "../../../../../../LogicFiles/Redux/hooks";
+import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+// use absolute paths from nextjs from ROOT
+// one day : https://nextjs.org/docs/app/building-your-application/configuring/absolute-imports-and-module-aliases
 export function useCaseIdSearchParam() {
     const searchParams = useSearchParams()
     const caseId = searchParams.get("clientId")
     return caseId
 }
+export function useClientDtoSearchParam() {
+    useStoreUserFromLocalStorage();
+    const { isSuccess, isFetching } = enhancedApi.useGetCaseGetcasescontextQuery();
 
-export function mapFormDataToCaseDto(clientDto: ClientDto, formData: ClientDto): ClientDto {
+    const searchParams = useSearchParams();
+    const caseId = searchParams.get("clientId");
+    const clients = useAppSelector((s) => s.caseSlice.clients);
+
+    // need this cast as clientDto to avoid
+    // feeding undefined to the react hook form library and therefore
+    // I avoid a null exception
+
+
+    const clientDto = clients
+        ? (clients.find((c) => c.id === caseId) as ClientDto)
+        : {} as ClientDto | undefined;
+
+    return clientDto;
+}
+
+export function mapFormDataToClientDto(clientDto: ClientDto, formData: ClientDto): ClientDto {
     const nextClient = produce(clientDto, clientDtoDraft => {
         clientDtoDraft.lastName = formData.lastName
         clientDtoDraft.firstName = formData.firstName
@@ -25,6 +48,7 @@ export function mapFormDataToCaseDto(clientDto: ClientDto, formData: ClientDto):
 // that why is works when navigating but not when refreshing.
 // absolutely necessary it seems.
 /** Used when the default form value must be overriden when a condition is met
+ * ie: when refetching data
  */
 export function useFormReset<T extends FieldValues>(mustReset: boolean, obj: T, reset: UseFormReset<T>) {
     const [isInitialized, setIsInitialized] = useState(false)

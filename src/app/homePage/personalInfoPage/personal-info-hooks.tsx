@@ -7,6 +7,7 @@ export function mapFormDataToLawyerDto(lawyer: LawyerDto, formLawyer: LawyerDto)
         lawyerDraft.lastName = formLawyer.lastName;
         lawyerDraft.address = formLawyer.address;
         lawyerDraft.email = formLawyer.email;
+        lawyerDraft.mobilePhoneNumber = formLawyer.mobilePhoneNumber;
     });
 
     return nextLawyer;

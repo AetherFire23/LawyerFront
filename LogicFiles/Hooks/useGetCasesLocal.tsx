@@ -7,14 +7,13 @@ import { setUser } from "../Redux/Slices/userSlice";
  * This will later allow the getCases query to be authorized when needed. */
 export default function useStoreUserFromLocalStorage() {
     const dispatch = useAppDispatch()
+
     // useEffect to ensure the window exists
     useEffect(() => {
         const storedValue: string = window.localStorage.getItem("jwtToken") ?? ""
         const storedValues = JSON.parse(storedValue) as LoginResult
         dispatch(setUser(storedValues))
-
-        logObject('The user was set to user found in localStorage:', storedValues)
-        console.log(`expecting rtk query to prepare headers`)
+        console.log(`expecting rtk query to prepare headers on next query`)
     }, []);
     // seems like empty dependency is necessary
 }
