@@ -66,9 +66,6 @@ export default function Home() {
                         <label> {isSuccess ? "Success" : ""} </label>
                     </div>
 
-                    <ModalButtonTest/>
-
-
                 </Box>
             </Container>
         </>

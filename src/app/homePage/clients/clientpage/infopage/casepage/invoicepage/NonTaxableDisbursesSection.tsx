@@ -1,9 +1,5 @@
 import { Container, Fab, Paper, Typography } from "@mui/material";
-import KeyedList from "../../../../../../../../LogicFiles/Components/KeyedList";
-import {
-    ActivityDto,
-} from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import Button from "@mui/material/Button";
+import { ActivityDto, } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import ActivitySummary from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/ActivitySummary";
 import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
 import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
@@ -28,7 +24,7 @@ export default function NonTaxableDisbursesSection({ nonTaxables, invoiceId }: I
                 alignItems: "center",
             }}>
             <Paper sx={{ marginBottom: "1rem" }}>
-                <TitleDivider title={"Taxable Disburses"}>
+                <TitleDivider title={"Non Taxable Disburses"}>
                     <AddNonTaxableDisburseButton invoiceId={invoiceId}/>
                 </TitleDivider>
                 <InsetList

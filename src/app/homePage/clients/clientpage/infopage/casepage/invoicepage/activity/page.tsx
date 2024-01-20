@@ -4,11 +4,10 @@ import {
     ActivityDto
 } from "../../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import {
-    DumbGetCasesSuspense,
     DumbSuspenseCondition
 } from "../../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import {
-    checkActivityType, mapFormDataToActivity,
+    mapFormDataToActivity,
     useActivityInitialization
 } from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/activity/activity-hooks";
 import { useSearchParams } from "next/navigation";
@@ -17,18 +16,12 @@ import { SubmitHandler, useForm, UseFormRegisterReturn } from "react-hook-form";
 import { useFormReset } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
 import Button from "@mui/material/Button";
 import { enhancedApi } from "../../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
-import Stack from "@mui/material/Stack";
 import { useNavigations } from "../../../../../../../../../LogicFiles/Hooks/Navigations";
 import TitleDivider from "../../../../../../../../../LogicFiles/Components/TitleDivider";
 import SaveIcon from "@mui/icons-material/Save";
 import ArchiveIcon from "@mui/icons-material/Archive";
-import BasicModal, { useModal } from "../../../../../../../../../LogicFiles/Controls/BasicModal";
 import AlertDialog, { useDialog } from "../../../../../../../../../LogicFiles/Components/BasicDialog";
-import AlertDialog42 from "../../../../../../../../../LogicFiles/Components/BasicDialog2";
 
-interface IActivityPageProps {
-    activity: ActivityDto;
-}
 
 export default function ActivityPage() {
 
@@ -53,13 +46,6 @@ function ActivityForm() {
     const { register, handleSubmit, reset } = useForm<ActivityDto>({ defaultValues: activity! });
     useFormReset(isSuccess, activity!, reset);
 
-    // const onSubmitClientUpdate: SubmitHandler<ClientDto> = async (caseDtoFormData) => {
-    //     console.log("submitting client");
-    //     const nextClientDto = mapFormDataToCaseDto(clientDto, caseDtoFormData);
-    //     triggerUpdateClient({ body: nextClientDto });
-    // };
-
-
     // I need to access the invoiceId from the activity, I guess ill just reintroduce the activityId inside the backend.
     function archiveActivity() {
         triggerArchiveActivity({ activityId: activity!.id }).unwrap().then(() => {
@@ -69,7 +55,7 @@ function ActivityForm() {
     }
 
     const onSubmitActivity: SubmitHandler<ActivityDto> = async (formActivityDto) => {
-        const modifiedActivity = mapFormDataToActivity(activity, formActivityDto);
+        const modifiedActivity = mapFormDataToActivity(activity!, formActivityDto);
         triggerSaveActivity({ body: modifiedActivity });
     };
 
