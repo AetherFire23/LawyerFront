@@ -77,11 +77,11 @@ export default function Home() {
 
 
 function ModalButtonTest() {
-    const { isOpen, handleOpen, handleClose } = useModal();
+    const modalReturn = useModal();
 
     return (
         <div>
-            <Button onClick={handleOpen}> openModal </Button>
-            <BasicModal isOpen={isOpen} handleClose={handleClose} modalText={"content"} modalTitle={"Title"}/>
+            <Button onClick={modalReturn.handleOpen}> openModal </Button>
+            <BasicModal modalState={modalReturn} modalText={"content"} modalTitle={"Title"}/>
         </div>);
 }

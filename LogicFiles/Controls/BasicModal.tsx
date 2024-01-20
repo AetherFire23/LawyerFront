@@ -16,7 +16,14 @@ const style = {
     p: 4,
 };
 
-export function useModal() {
+
+export interface IUseReturnModal {
+    isOpen: boolean,
+    handleOpen: () => void,
+    handleClose: () => void
+}
+
+export function useModal() : IUseReturnModal {
     const [isOpen, setIsOpen] = React.useState(false);
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
@@ -31,18 +38,17 @@ export function useModal() {
 
 
 interface IModalProps {
-    isOpen: boolean,
-    handleClose: () => void,
+    modalState: IUseReturnModal
     modalTitle: string,
     modalText: string,
 }
 
-export default function BasicModal({ isOpen, handleClose, modalTitle, modalText }: IModalProps) {
+export default function BasicModal({ modalState, modalTitle, modalText }: IModalProps) {
     return (
         <div>
             <Modal
-                open={isOpen}
-                onClose={handleClose}
+                open={modalState}
+                onClose={modalState.handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >

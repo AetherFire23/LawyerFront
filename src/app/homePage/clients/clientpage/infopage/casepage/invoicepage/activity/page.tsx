@@ -3,19 +3,28 @@
 import {
     ActivityDto
 } from "../../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { DumbGetCasesSuspense } from "../../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
+import {
+    DumbGetCasesSuspense,
+    DumbSuspenseCondition
+} from "../../../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import {
     checkActivityType, mapFormDataToActivity,
     useActivityInitialization
 } from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/activity/activity-hooks";
 import { useSearchParams } from "next/navigation";
-import { Container, Paper, TextField } from "@mui/material";
+import { Container, Fab, Paper, TextField } from "@mui/material";
 import { SubmitHandler, useForm, UseFormRegisterReturn } from "react-hook-form";
 import { useFormReset } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
 import Button from "@mui/material/Button";
 import { enhancedApi } from "../../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
 import Stack from "@mui/material/Stack";
 import { useNavigations } from "../../../../../../../../../LogicFiles/Hooks/Navigations";
+import TitleDivider from "../../../../../../../../../LogicFiles/Components/TitleDivider";
+import SaveIcon from "@mui/icons-material/Save";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import BasicModal, { useModal } from "../../../../../../../../../LogicFiles/Controls/BasicModal";
+import AlertDialog, { useDialog } from "../../../../../../../../../LogicFiles/Components/BasicDialog";
+import AlertDialog42 from "../../../../../../../../../LogicFiles/Components/BasicDialog2";
 
 interface IActivityPageProps {
     activity: ActivityDto;
@@ -24,9 +33,9 @@ interface IActivityPageProps {
 export default function ActivityPage() {
 
     return (
-        <DumbGetCasesSuspense>
+        <>
             <ActivityForm/>
-        </DumbGetCasesSuspense>
+        </>
     );
 }
 
@@ -50,10 +59,6 @@ function ActivityForm() {
     //     triggerUpdateClient({ body: nextClientDto });
     // };
 
-    if (!activity) {
-        console.log("act w2as nul");
-        return <div> Loading </div>;
-    }
 
     // I need to access the invoiceId from the activity, I guess ill just reintroduce the activityId inside the backend.
     function archiveActivity() {
@@ -68,37 +73,29 @@ function ActivityForm() {
         triggerSaveActivity({ body: modifiedActivity });
     };
 
-    const activityType = checkActivityType(activity!);
+    //const activityType = checkActivityType(activity!);
     return (
-        <Container sx={{ display: "flex" }}>
-            <Stack direction={"column"}>
-                <form onSubmit={handleSubmit(onSubmitActivity)}>
-                    <Paper sx={{ display: "flex", flexDirection: "column" }}>
-                        <TextField
-                            autoComplete={"off"}
-                            {...register("description", {})}
-                            id="standard-basic"
-                            label="desc"
-                            variant="outlined"
-                            className="input mb-5 input-bordered"
-                            defaultValue=""
-                        />
-                        <TextField
-                            {...register("costInDollars", {})}
-                            id="standard-basic"
-                            label="cost"
-                            variant="outlined"
-                            className="input mb-5 input-bordered"
-                            defaultValue=""
-                        />
-                        <FormTextField label={"quantity"} register={register("quantity")}/>
-                    </Paper>
-                    <Button type="submit"> Save </Button>
+        <DumbSuspenseCondition condition={(isSuccess && !isFetching) && !!activity}>
+            <Container sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Paper sx={{ display: "flex", flexDirection: "column", marginTop: "2rem", width: "50vw" }}>
+                    <form onSubmit={handleSubmit(onSubmitActivity)}>
+                        <TitleDivider title={"Activity information"}>
+                            <Fab type="submit" color={"primary"} sx={{ marginLeft: "1rem" }}>
+                                <SaveIcon/>
+                            </Fab>
+                            <ArchiveButtonWithModal activity={activity!} invoiceId={invoiceId!}/>
 
-                </form>
-                <Button onClick={archiveActivity}> Archive </Button>
-            </Stack>
-        </Container>
+                        </TitleDivider>
+                        <Container sx={{ marginLeft: "1rem", marginTop: "1rem" }}>
+                            <FormTextField label={"description"} register={register("description")}/>
+                            <FormTextField label={"cost"} register={register("costInDollars")}/>
+                            <FormTextField label={"quantity"} register={register("quantity")}/>
+                        </Container>
+                    </form>
+                    <Button onClick={archiveActivity}> Archive </Button>
+                </Paper>
+            </Container>
+        </DumbSuspenseCondition>
     );
 }
 
@@ -106,6 +103,7 @@ interface IFormFieldProps {
     label: string,
     register?: UseFormRegisterReturn<any>
 }
+
 function FormTextField({ register, label }: IFormFieldProps) {
     return (
         <>
@@ -116,6 +114,31 @@ function FormTextField({ register, label }: IFormFieldProps) {
                 variant="outlined"
                 sx={{ width: "80%", paddingBottom: "1rem" }}
             />
+        </>
+    );
+}
+
+function ArchiveButtonWithModal({ activity, invoiceId }: { activity: ActivityDto, invoiceId: string }) {
+    const [triggerArchiveActivity, data] = enhancedApi.usePutInvoiceRemoveactivityMutation();
+    const { navigateToInvoice } = useNavigations();
+    const dialogState = useDialog();
+
+    function archiveActivity() {
+        triggerArchiveActivity({ activityId: activity!.id }).unwrap().then(() => {
+            console.log("archiving stuff");
+            navigateToInvoice(invoiceId!);
+        });
+    }
+
+    return (
+        <>
+            <Fab color={"primary"} sx={{ marginLeft: "1rem" }} onClick={dialogState.handleClickOpen}>
+                <ArchiveIcon/>
+            </Fab>
+            <AlertDialog dialogState={dialogState}
+                         title={"Confirmation"}
+                         content={"Do you really wish to archive this activity?"}
+                         onAgree={archiveActivity}/>
         </>
     );
 }

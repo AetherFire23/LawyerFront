@@ -5,6 +5,7 @@ import { ActivityDto } from "../../../../../../../../../LogicFiles/Redux/codegen
 import logObject from "../../../../../../../../../LogicFiles/Utils/logObject";
 import { produce } from "immer";
 
+
 export type ActivityType = "HourlyActivity" | "TaxableDisburse" | "NonTaxableDisburse"
 
 export function useActivityInitialization() {
@@ -12,8 +13,10 @@ export function useActivityInitialization() {
     const searchParams = useSearchParams();
     const activityId = searchParams.get("activityId");
     const caseSlice = useAppSelector(c => c.caseSlice);
-    // this is probably pushable into back-end instead of mapping here
-    const activities = caseSlice!.clients!.flatMap(c => c.cases)!.flatMap(c => c!.invoices)!.flatMap(c => c!.activities);
+    // this is probably pushable into back-end instead of mapping
+    if(!caseSlice || !caseSlice.clients) return {} as ActivityDto | null | undefined;
+
+    const activities = caseSlice.clients!.flatMap(c => c.cases)!.flatMap(c => c!.invoices)!.flatMap(c => c!.activities);
     const activityParameter = activities
         ? activities.find(a => a!.id === activityId)
         : {} as ActivityDto | null | undefined;
