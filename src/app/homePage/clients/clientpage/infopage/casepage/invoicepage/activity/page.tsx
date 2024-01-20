@@ -10,7 +10,7 @@ import {
 } from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/activity/activity-hooks";
 import { useSearchParams } from "next/navigation";
 import { Container, Paper, TextField } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, UseFormRegisterReturn } from "react-hook-form";
 import { useFormReset } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
 import Button from "@mui/material/Button";
 import { enhancedApi } from "../../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
@@ -91,14 +91,7 @@ function ActivityForm() {
                             className="input mb-5 input-bordered"
                             defaultValue=""
                         />
-                        <TextField
-                            {...register("quantity", {})}
-                            id="standard-basic"
-                            label="quantity"
-                            variant="outlined"
-                            className="input mb-5 input-bordered"
-                            defaultValue=""
-                        />
+                        <FormTextField label={"quantity"} register={register("quantity")}/>
                     </Paper>
                     <Button type="submit"> Save </Button>
 
@@ -109,4 +102,20 @@ function ActivityForm() {
     );
 }
 
-
+interface IFormFieldProps {
+    label: string,
+    register?: UseFormRegisterReturn<any>
+}
+function FormTextField({ register, label }: IFormFieldProps) {
+    return (
+        <>
+            <TextField
+                {...register}
+                id="standard-basic"
+                label={label}
+                variant="outlined"
+                sx={{ width: "80%", paddingBottom: "1rem" }}
+            />
+        </>
+    );
+}

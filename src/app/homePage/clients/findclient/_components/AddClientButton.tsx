@@ -16,10 +16,11 @@ export default function AddClientButton() {
     }
 
     return (
-        <div>
-            <Fab onClick={addClientThenNavigate} color="primary" aria-label="add">
+        <>
+            {/* https://mui.com/material-ui/react-floating-action-button/ */}
+            <Fab size={"medium"} onClick={addClientThenNavigate} color="primary" aria-label="add" sx={{marginLeft: "1rem"}}>
                 <AddIcon/>
             </Fab>
-        </div>
+        </>
     );
 }

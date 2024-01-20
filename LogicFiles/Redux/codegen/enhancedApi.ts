@@ -39,8 +39,6 @@ export const enhancedApi = userApiGen2.enhanceEndpoints({
         putCaseSavecase: {
             invalidatesTags: caseTag
         },
-
-
     }
 });
 

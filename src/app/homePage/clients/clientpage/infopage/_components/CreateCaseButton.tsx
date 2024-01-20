@@ -1,6 +1,7 @@
 import { useNavigations } from "../../../../../../../LogicFiles/Hooks/Navigations";
-import Button from "@mui/material/Button";
 import { enhancedApi } from "../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import BasicAddFab from "../../../../../../../LogicFiles/Components/BasicAddFab";
+
 
 export default function CreateCaseButton({ clientId }: { clientId: string }) {
     const [triggerAddCase, queryData] = enhancedApi.usePostCaseCreatenewcaseMutation();
@@ -13,6 +14,8 @@ export default function CreateCaseButton({ clientId }: { clientId: string }) {
     }
 
     return (
-        <Button onClick={addCaseAndNavigate}> Add Case </Button>
+        <BasicAddFab onClick={addCaseAndNavigate} sx={{
+            margin: "1rem"
+        }}/>
     );
 }

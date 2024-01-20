@@ -68,7 +68,7 @@ export function useNavigateToClient() {
 //     const router = useRouter();
 //
 //     function navigate(caseId: string) {
-//         const baseUrl = "/homePage/clients/clientpage/infopage/casepage";
+//         const baseUrl = "/homePage/clients/clientpage/info page/casepage";
 //         const parameters = `?caseId=${caseId}`;
 //         const route = baseUrl + parameters;
 //         router.push(route);

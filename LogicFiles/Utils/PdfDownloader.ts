@@ -24,7 +24,7 @@ export default function downloadPdf(apiUrl: string, downloadFileName: string) {
         // HTTP only allows strings in base64
         // but there is no way to access the actual content of the PDF in a blob, I do not know the exact reason honestly
         bloop.text().then(c => {
-            // So I ran the blob text() content into a JSON to typescript converter... and I got the IBlob interface that way
+            // So I ran the blob.text() content into a JSON to typescript converter... and I got the IBlob interface that way
             const asIBlob = JSON.parse(c) as IBlob;
 
             // and I also ran fileContents into a Base64 to pdf converter online so I knew this was

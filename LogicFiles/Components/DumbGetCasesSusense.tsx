@@ -24,8 +24,7 @@ export function DumbSuspenseCondition({ children, condition }: { children: React
     const { isSuccess, isFetching } = enhancedApi.useGetCaseGetcasescontextQuery();
     // show loading spinner if data is not fetched
     return (
-        <div>
-
+        <>
             {(!condition && (!isSuccess || isFetching)) && (
                 <Container sx={{
                     width: "100vw",
@@ -35,12 +34,11 @@ export function DumbSuspenseCondition({ children, condition }: { children: React
                     alignItems: "center"
                 }}>
                     <LoadingSpinner/>
-
                 </Container>
             )
             }
             {(condition && isSuccess && !isFetching) && (children)}
-        </div>
+        </>
     );
 }
 

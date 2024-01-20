@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Container, Fab, Paper, Typography } from "@mui/material";
 import KeyedList from "../../../../../../../../LogicFiles/Components/KeyedList";
 import {
     ActivityDto,
@@ -7,6 +7,9 @@ import Button from "@mui/material/Button";
 import ActivitySummary from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/ActivitySummary";
 import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
 import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import TitleDivider from "../../../../../../../../LogicFiles/Components/TitleDivider";
+import InsetList from "../../../../../../../../LogicFiles/Components/BasicListTest";
+import AddIcon from "@mui/icons-material/Add";
 
 interface INonTaxableDisbursesSectionProps {
     nonTaxables: ActivityDto[],
@@ -14,13 +17,28 @@ interface INonTaxableDisbursesSectionProps {
 }
 
 export default function NonTaxableDisbursesSection({ nonTaxables, invoiceId }: INonTaxableDisbursesSectionProps) {
-    const render = (nonTaxableDisburse: ActivityDto) => (<ActivitySummary activity={nonTaxableDisburse} invoiceId={invoiceId}/>);
+    const { navigateToActivity } = useNavigations();
+    const render = (nonTaxableDisburse: ActivityDto) => (
+        <ActivitySummary activity={nonTaxableDisburse} invoiceId={invoiceId}/>);
     return (
-        <div>
-            <h1> Non Taxable Disburses section </h1>
-            <KeyedList list={nonTaxables} renderer={render}/>
-            <AddNonTaxableDisburseButton invoiceId={invoiceId}/>
-        </div>
+        <Container
+            sx={{
+                width: "54vw",
+                marginTop: "2rem",
+                alignItems: "center",
+            }}>
+            <Paper sx={{ marginBottom: "1rem" }}>
+                <TitleDivider title={"Taxable Disburses"}>
+                    <AddNonTaxableDisburseButton invoiceId={invoiceId}/>
+                </TitleDivider>
+                <InsetList
+                    items={nonTaxables!}
+                    onClickHandler={(arg) => navigateToActivity(arg.id, invoiceId)}
+                    toStringValue={(arg) => arg.createdAt!.toString()}
+                    maxHeight={"22rem"}
+                />
+            </Paper>
+        </Container>
     );
 }
 
@@ -42,6 +60,8 @@ function AddNonTaxableDisburseButton({ invoiceId }: { invoiceId: string }) {
     }
 
     return (
-        <Button onClick={addActivityThenNavigate}> Add Non Taxable Disburse </Button>
+        <Fab size={"medium"} color={"primary"} onClick={addActivityThenNavigate} sx={{marginLeft: "1rem"}}>
+            <AddIcon/>
+        </Fab>
     );
 }

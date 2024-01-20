@@ -9,24 +9,19 @@ import { enhancedApi } from "../../../../../../../LogicFiles/Redux/codegen/enhan
 
 export default function CasePage() {
     const caseDto = useCaseDtoFromParam();
-    const { isSuccess } = enhancedApi.useGetCaseGetcasescontextQuery();
+    const { isSuccess, isFetching } = enhancedApi.useGetCaseGetcasescontextQuery();
 
     return (
-        <DumbSuspenseCondition condition={isSuccess}>
+        <DumbSuspenseCondition condition={isSuccess && !isFetching && !!caseDto}>
             {caseDto && (
-                <div>
-                    <Container sx={{ width: "30vw" }}>
-                        <CaseForm caseDto={caseDto}/>
-                        <InvoiceNavList invoices={caseDto?.invoices} caseId={caseDto?.id}/>
-                    </Container>
-                </div>
+                <Container sx={{width: "100vw"}}>
+                    <CaseForm caseDto={caseDto}/>
+                    <InvoiceNavList invoices={caseDto?.invoices} caseId={caseDto?.id}/>
+                </Container>
             )}
         </DumbSuspenseCondition>
     );
 }
-
-
-
 
 
 // function useNavigateToInvoice() {

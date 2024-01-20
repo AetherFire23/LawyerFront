@@ -465,7 +465,7 @@ export type GetInvoiceGetinvoiceApiResponse = /** status 200 Success */ Blob;
 export type GetInvoiceGetinvoiceApiArg = {
   invoiceId?: string;
 };
-export type GetInvoiceGetinvoice2ApiResponse = unknown;
+export type GetInvoiceGetinvoice2ApiResponse = /** status 200 Success */ Blob;
 export type GetInvoiceGetinvoice2ApiArg = {
   invoiceId?: string;
 };

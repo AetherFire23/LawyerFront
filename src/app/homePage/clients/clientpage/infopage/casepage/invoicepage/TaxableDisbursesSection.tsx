@@ -6,6 +6,10 @@ import Button from "@mui/material/Button";
 import ActivitySummary from "@/app/homePage/clients/clientpage/infopage/casepage/invoicepage/ActivitySummary";
 import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
 import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { Container, Fab, Paper } from "@mui/material";
+import TitleDivider from "../../../../../../../../LogicFiles/Components/TitleDivider";
+import InsetList from "../../../../../../../../LogicFiles/Components/BasicListTest";
+import AddIcon from "@mui/icons-material/Add";
 
 interface ITaxableDisbursesSectionProps {
     taxableDisburses: ActivityDto[],
@@ -13,19 +17,33 @@ interface ITaxableDisbursesSectionProps {
 }
 
 export default function TaxableDisbursesSection({ taxableDisburses, invoiceId }: ITaxableDisbursesSectionProps) {
+    const { navigateToActivity } = useNavigations();
     if (!taxableDisburses) return <div></div>;
-
     const taxableDisburseRenderer = (a: ActivityDto) => (<ActivitySummary activity={a} invoiceId={invoiceId}/>);
     return (
-        <div>
-            <h1> taxable disburses section </h1>
-            <RenderKeyedList keyedObjects={taxableDisburses} componentRenderer={taxableDisburseRenderer}/>
-            <AddTaxableDisburseButton invoiceId={invoiceId}/>
-        </div>
+        <Container
+            sx={{
+                width: "54vw",
+                marginTop: "2rem",
+                alignItems: "center",
+            }}>
+            <Paper sx={{ marginBottom: "1rem" }}>
+                <TitleDivider title={"Taxable Disburses"}>
+                    <AddTaxableDisburseButton invoiceId={invoiceId}/>
+                </TitleDivider>
+                <InsetList
+                    items={taxableDisburses!}
+                    onClickHandler={(arg) => navigateToActivity(arg.id, invoiceId)}
+                    toStringValue={(arg) => arg.createdAt!.toString()}
+                    maxHeight={"22rem"}
+                />
+            </Paper>
+        </Container>
     );
 }
+
 function AddTaxableDisburseButton({ invoiceId }: { invoiceId: string }) {
-    const { navigateToActivity } = useNavigations()
+    const { navigateToActivity } = useNavigations();
     const [triggerAddActivity, data] = enhancedApi.usePostInvoiceCreateactivityMutation();
 
     function addActivityThenNavigate() {
@@ -35,6 +53,10 @@ function AddTaxableDisburseButton({ invoiceId }: { invoiceId: string }) {
     }
 
     return (
-        <Button onClick={addActivityThenNavigate}> Add Taxable Disburse </Button>
+        <>
+            <Fab size="medium" color="primary" sx={{ marginLeft: "1rem" }} onClick={addActivityThenNavigate}>
+                <AddIcon/>
+            </Fab>
+        </>
     );
 }

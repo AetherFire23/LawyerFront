@@ -1,8 +1,16 @@
 import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
-import { Button } from "@mui/material";
+import { Button, SxProps, Theme } from "@mui/material";
 import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import BasicAddFab from "../../../../../../../../LogicFiles/Components/BasicAddFab";
 
-export default function CreateInvoiceButton({ caseId }: { caseId: string | undefined }) {
+
+interface CreateInvoiceButtonProps{
+    caseId: string,
+    sx?: SxProps<Theme>
+
+}
+
+export default function CreateInvoiceButton({ caseId, sx }: CreateInvoiceButtonProps) {
     const [triggerAddInvoice, queryData] = enhancedApi.usePostInvoiceCreateinvoiceMutation();
     const { navigateToInvoice } = useNavigations();
 
@@ -14,8 +22,6 @@ export default function CreateInvoiceButton({ caseId }: { caseId: string | undef
     }
 
     return (
-        <Button onClick={onAddInvoiceButtonClick}>
-            Add Invoice
-        </Button>
+        <BasicAddFab onClick={onAddInvoiceButtonClick} sx={sx}/>
     );
 }

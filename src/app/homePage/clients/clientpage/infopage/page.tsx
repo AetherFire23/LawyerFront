@@ -3,9 +3,9 @@ import { useClientDtoSearchParam, } from "./infpoage-hooks";
 import { DumbSuspenseCondition } from "../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import ClientForm from "@/app/homePage/clients/clientpage/infopage/_components/ClientForm";
 import CasesNavList from "@/app/homePage/clients/clientpage/infopage/_components/CasesNavList";
-import CreateCaseButton from "@/app/homePage/clients/clientpage/infopage/_components/CreateCaseButton";
 import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
 import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { Container } from "@mui/material";
 
 // https://www.svgrepo.com/svg/522262/save-floppy
 
@@ -13,20 +13,17 @@ export default function InfoPage() {
     useStoreUserFromLocalStorage();
     const data = enhancedApi.useGetCaseGetcasescontextQuery();
     const clientDto = useClientDtoSearchParam();
-    console.log(data)
+
     return (
         <DumbSuspenseCondition condition={data.isSuccess && !data.isFetching && !!clientDto}>
-            <label> am i loaded?</label>
             {clientDto && (
-                <div>
-                    <h1> infopage </h1>
+                <Container sx={{ width: "100vw" }}>
                     <ClientForm clientDto={clientDto!}/>
                     <CasesNavList clientDto={clientDto!}/>
-                    <CreateCaseButton clientId={clientDto!.id}/>
-                </div>
+                </Container>
             )}
-
-        </DumbSuspenseCondition>);
+        </DumbSuspenseCondition>
+    );
 }
 
 

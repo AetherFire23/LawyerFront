@@ -3,9 +3,10 @@ import { useNavigations } from "../../../../../../LogicFiles/Hooks/Navigations";
 import { isFalsyOrWhitespace } from "../../../../../../LogicFiles/Utils/StringExtensions";
 import { Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import styles from "../cardHover.module.css";
 
-export default function ClientSummary({ client }: { client: ClientDto }) {
-    const {navigateToClient} = useNavigations()
+export default function ClientNavCard({ client }: { client: ClientDto }) {
+    const { navigateToClient } = useNavigations();
 
     const fullClientName = `${client.firstName} ${client.lastName}`;
     const renderedname = isFalsyOrWhitespace(fullClientName)
@@ -19,7 +20,9 @@ export default function ClientSummary({ client }: { client: ClientDto }) {
                     width: "75vw",
                     marginTop: "0.5rem",
                     padding: "0.25rem"
-                }}>
+                }}
+                className={styles.cardHover}>
+
                 <div onClick={() => navigateToClient(client.id)}>
                     < Typography className="flex justify-center items-center"> {renderedname} </Typography>
                 </div>

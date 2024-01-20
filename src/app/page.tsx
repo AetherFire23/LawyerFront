@@ -55,6 +55,7 @@ export default function Home() {
                                        defaultValue="" {...register("password", { required: true })} />
                             <Button sx={{ marginTop: "1em" }} type="submit"> Login </Button>
                         </form>
+
                         <Link href={"/registerPage"}>
                             <Button> Register </Button>
                         </Link>
