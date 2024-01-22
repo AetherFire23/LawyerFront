@@ -1,12 +1,13 @@
-import { ClientDto } from "../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { enhancedApi } from "../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import * as React from "react";
 import { SubmitHandler, useForm, UseFormRegisterReturn } from "react-hook-form";
 import { mapFormDataToClientDto, useFormReset } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
-import { Container, Fab, Paper, TextField } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Box, Container, Paper, TextField } from "@mui/material";
 import { FormEventHandler } from "react";
-import TitleDivider from "../../../../../../../LogicFiles/Components/TitleDivider";
-import SaveIcon from "@mui/icons-material/Save";
+import { ClientDto } from "@/Redux/codegen/userApi2Gen";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { FormBody, FormContainer, FormField, FormHeader } from "@/Components/GenericForms/FormBody";
+import { SaveIconButton } from "@/Components/Icons/Icons";
+import Button from "@mui/material/Button";
 
 export default function ClientForm({ clientDto }: { clientDto: ClientDto }) {
     const { isFetching: isFetchingCases, isSuccess: isSuccessCases } = enhancedApi.useGetCaseGetcasescontextQuery();
@@ -21,17 +22,24 @@ export default function ClientForm({ clientDto }: { clientDto: ClientDto }) {
     };
 
     return (
-        <FormBox formHandler={handleSubmit(onSubmitClientUpdate)}>
-            <TitleDivider title={"Client information"}>
-                <Fab color={"primary"} size="medium" type={"submit"} sx={{ marginBottom: "1rem", marginLeft: "1rem" }}> <SaveIcon/> </Fab>
-            </TitleDivider>
-            <Container >
-                <FormTextField label="adresse" register={register("address")}/>
-                <FormTextField label="firstName" register={register("firstName")}/>
-                <FormTextField label="lastName" register={register("lastName")}/>
-                <FormTextField label="email" register={register("email")}/>
-            </Container>
-        </FormBox>
+        <>
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "1rem", width: "50vw" }}>
+                <Box sx={{width: "50vw"}}>
+                    <FormContainer submitHandler={handleSubmit(onSubmitClientUpdate)}>
+                        <FormHeader title={"Client Information"}>
+                            <SaveIconButton type={"submit"}/>
+                        </FormHeader>
+                        <FormBody>
+                            <FormField text={"adresse"} register={register("address")}/>
+                            <FormField text={"firstName"} register={register("firstName")}/>
+                            <FormField text={"lastName"} register={register("lastName")}/>
+                            <FormField text={"email"} register={register("email")}/>
+                            <Button type={"submit"}></Button>
+                        </FormBody>
+                    </FormContainer>
+                </Box>
+            </Box>
+        </>
     );
 }
 

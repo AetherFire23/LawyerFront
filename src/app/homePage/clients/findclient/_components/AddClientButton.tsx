@@ -1,8 +1,8 @@
-import { useNavigations } from "../../../../../../LogicFiles/Hooks/Navigations";
-import logObject from "../../../../../../LogicFiles/Utils/logObject";
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { useNavigations } from "@/Hooks/Navigations";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import logObject from "@/Utils/logObject";
 
 export default function AddClientButton() {
     const { navigateToClient } = useNavigations();

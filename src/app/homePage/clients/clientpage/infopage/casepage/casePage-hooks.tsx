@@ -1,10 +1,10 @@
-import useStoreUserFromLocalStorage from "../../../../../../../LogicFiles/Hooks/useGetCasesLocal";
 import { useSearchParams } from "next/navigation";
-import { useAppSelector } from "../../../../../../../LogicFiles/Redux/hooks";
-import { GetCases } from "../../../../../../../LogicFiles/TypeScriptExtensions/CaseContextDtoExtensions";
-import { isValidArray } from "../../../../../../../LogicFiles/TypeScriptExtensions/ArrayExtensions";
-import { CaseDto } from "../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import { produce } from "immer";
+import useStoreUserFromLocalStorage from "@/Hooks/useGetCasesLocal";
+import { useAppSelector } from "@/Redux/hooks";
+import { GetCases } from "@/TypeScriptExtensions/CaseContextDtoExtensions";
+import { isValidArray } from "@/TypeScriptExtensions/ArrayExtensions";
+import { CaseDto } from "@/Redux/codegen/userApi2Gen";
 
 export function useCaseDtoFromParam() {
     // should check if fetching befaire all this could result in lesser null checking

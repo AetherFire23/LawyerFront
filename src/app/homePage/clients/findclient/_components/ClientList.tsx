@@ -1,10 +1,10 @@
-import { ClientDto } from "../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import AddClientButton from "@/app/homePage/clients/findclient/_components/AddClientButton";
 import { Container, Paper } from "@mui/material";
-import TitleDivider from "../../../../../../LogicFiles/Components/TitleDivider";
-import InsetList from "../../../../../../LogicFiles/Components/BasicListTest";
-import { useNavigations } from "../../../../../../LogicFiles/Hooks/Navigations";
-import { isFalsyOrWhitespace } from "../../../../../../LogicFiles/Utils/StringExtensions";
+import InsetList from "@/Components/BasicListTest";
+import { ClientDto } from "@/Redux/codegen/userApi2Gen";
+import { useNavigations } from "@/Hooks/Navigations";
+import { isFalsyOrWhitespace } from "@/Utils/StringExtensions";
+import TitleDivider from "@/Components/TitleDivider";
 
 export default function ClientList({ clients }: { clients: ClientDto[] }) {
     const { navigateToClient } = useNavigations();

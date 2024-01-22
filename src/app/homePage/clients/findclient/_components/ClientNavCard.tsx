@@ -1,9 +1,9 @@
-import { ClientDto } from "../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { useNavigations } from "../../../../../../LogicFiles/Hooks/Navigations";
-import { isFalsyOrWhitespace } from "../../../../../../LogicFiles/Utils/StringExtensions";
 import { Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import styles from "../cardHover.module.css";
+import { useNavigations } from "@/Hooks/Navigations";
+import { isFalsyOrWhitespace } from "@/Utils/StringExtensions";
+import { ClientDto } from "@/Redux/codegen/userApi2Gen";
 
 export default function ClientNavCard({ client }: { client: ClientDto }) {
     const { navigateToClient } = useNavigations();

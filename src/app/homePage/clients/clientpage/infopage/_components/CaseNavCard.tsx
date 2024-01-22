@@ -1,7 +1,8 @@
-import { CaseDto } from "../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { useNavigations } from "../../../../../../../LogicFiles/Hooks/Navigations";
 import { Paper, Typography } from "@mui/material";
-import styles from "../../../../../../../LogicFiles/CssModules/cardHover.module.css"
+import styles from "../../../../../../../LogicFiles/CssModules/cardHover.module.css";
+import { useNavigations } from "@/Hooks/Navigations";
+import { CaseDto } from "@/Redux/codegen/userApi2Gen";
+
 export default function CaseNavCard({ caseDto }: { caseDto: CaseDto }) {
     const { navigateToCase } = useNavigations();
     return (

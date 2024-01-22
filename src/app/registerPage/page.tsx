@@ -2,8 +2,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import { Box, Button, Container, TextField } from "@mui/material";
-import { RegisterRequest } from "../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { enhancedApi } from "../../../LogicFiles/Redux/codegen/enhancedApi";
+import { RegisterRequest } from "@/Redux/codegen/userApi2Gen";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
 
 export default function RegisterPage() {
     const [triggerRegister, { isLoading, isError, isSuccess }] = enhancedApi.usePostUserRegisterMutation();
@@ -39,10 +39,8 @@ export default function RegisterPage() {
                     <label> {isLoading ? "loading" : ""} </label>
                     <label> {isError ? "Error while registering" : ""} </label>
                     <label> {isSuccess ? "Success!" : ""} </label>
-
                 </div>
             </Box>
         </Container>
-
     );
 }

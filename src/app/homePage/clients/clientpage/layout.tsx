@@ -7,7 +7,6 @@ import React, { useState } from "react";
 // those are the TABS of the client page (invoice, cases and shit)
 export default function ClientPageLayout({ children }: { children: React.ReactNode }) {
     // could bring that into an HOC
-    console.log("am I inside clientPage")
     const router = useRouter()
     const [active, setActive] = useState(0)
     const searchParams = useSearchParams()

@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import { Box, Container, TextField, Typography } from "@mui/material";
-import { useAppDispatch } from "../../LogicFiles/Redux/hooks";
-import { LoginRequest, LoginResult, userApiGen2 } from "../../LogicFiles/Redux/codegen/userApi2Gen";
-import { setUser } from "../../LogicFiles/Redux/Slices/userSlice";
-import BasicModal, { useModal } from "../../LogicFiles/Controls/BasicModal";
+import BasicModal, { useModal } from "@/Controls/BasicModal";
+import { useAppDispatch } from "@/Redux/hooks";
+import { LoginRequest, LoginResult, userApiGen2 } from "@/Redux/codegen/userApi2Gen";
+import { setUser } from "@/Redux/Slices/userSlice";
+
 
 export default function Home() {
     const router = useRouter();

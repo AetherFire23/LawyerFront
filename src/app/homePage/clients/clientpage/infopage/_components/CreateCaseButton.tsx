@@ -1,7 +1,6 @@
-import { useNavigations } from "../../../../../../../LogicFiles/Hooks/Navigations";
-import { enhancedApi } from "../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
-import BasicAddFab from "../../../../../../../LogicFiles/Components/BasicAddFab";
-
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { useNavigations } from "@/Hooks/Navigations";
+import BasicAddFab from "@/Components/BasicAddFab";
 
 export default function CreateCaseButton({ clientId }: { clientId: string }) {
     const [triggerAddCase, queryData] = enhancedApi.usePostCaseCreatenewcaseMutation();

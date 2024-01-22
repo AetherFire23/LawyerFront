@@ -1,5 +1,5 @@
-import { LawyerDto } from "../../../../LogicFiles/Redux/codegen/userApi2Gen";
 import { produce } from "immer";
+import { LawyerDto } from "@/Redux/codegen/userApi2Gen";
 
 export function mapFormDataToLawyerDto(lawyer: LawyerDto, formLawyer: LawyerDto) {
     const nextLawyer = produce(lawyer, lawyerDraft => {

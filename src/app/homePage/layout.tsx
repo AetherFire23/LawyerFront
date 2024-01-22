@@ -5,13 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import Link from "next/link";
-import AppBarMenu from "../../../LogicFiles/Controls/AppBarMenu";
-import { useRouter } from "next/navigation";
-import useStoreUserFromLocalStorage from "../../../LogicFiles/Hooks/useGetCasesLocal";
-import { CaseDto } from "../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { enhancedApi } from "../../../LogicFiles/Redux/codegen/enhancedApi";
 
 export default function HomeLayout({
     children,

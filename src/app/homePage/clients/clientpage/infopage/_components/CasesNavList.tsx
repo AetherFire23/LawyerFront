@@ -1,11 +1,9 @@
-import { ClientDto } from "../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { Box, Container, Paper, Typography } from "@mui/material";
-import CaseNavCard from "@/app/homePage/clients/clientpage/infopage/_components/CaseNavCard";
+import { Container, Paper } from "@mui/material";
 import CreateCaseButton from "@/app/homePage/clients/clientpage/infopage/_components/CreateCaseButton";
-import TitleDivider from "../../../../../../../LogicFiles/Components/TitleDivider";
-import CreateInvoiceButton from "@/app/homePage/clients/clientpage/infopage/casepage/_components/CreateInvoiceButton";
-import InsetList from "../../../../../../../LogicFiles/Components/BasicListTest";
-import { useNavigations } from "../../../../../../../LogicFiles/Hooks/Navigations";
+import { useNavigations } from "@/Hooks/Navigations";
+import { ClientDto } from "@/Redux/codegen/userApi2Gen";
+import TitleDivider from "@/Components/TitleDivider";
+import InsetList from "@/Components/BasicListTest";
 
 export default function CasesNavList({ clientDto }: { clientDto: ClientDto }) {
     const{navigateToCase} = useNavigations()

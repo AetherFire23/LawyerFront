@@ -1,49 +1,55 @@
-import { CaseDto, ChamberNames, } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
+import * as React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { EnsureUnion } from "../../../../../../../../LogicFiles/Utils/StringExtensions";
-import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
-import logObject from "../../../../../../../../LogicFiles/Utils/logObject";
 import { mapCaseFormDataToDto } from "@/app/homePage/clients/clientpage/infopage/casepage/casePage-hooks";
 import { Container, Fab, Paper, Typography } from "@mui/material";
-import * as React from "react";
-import TitleDivider from "../../../../../../../../LogicFiles/Components/TitleDivider";
-import SaveIcon from '@mui/icons-material/Save';
+import SaveIcon from "@mui/icons-material/Save";
+import { CaseDto, ChamberNames } from "@/Redux/codegen/userApi2Gen";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import logObject from "@/Utils/logObject";
+import TitleDivider from "@/Components/TitleDivider";
+import { EnsureUnion } from "@/Utils/StringExtensions";
+import { FormBody, FormContainer, FormField, FormHeader } from "@/Components/GenericForms/FormBody";
+import { SaveIconButton } from "@/Components/Icons/Icons";
+import Button from "@mui/material/Button";
 
 export default function CaseForm({ caseDto }: { caseDto: CaseDto }) {
-    const { register, reset, handleSubmit, control } = useForm<CaseDto>({ defaultValues: caseDto });
-    const [triggerCaseUpdate, data] = enhancedApi.usePutCaseSavecaseMutation();
+    const {  handleSubmit, control } = useForm<CaseDto>({ defaultValues: caseDto });
+    const [triggerCaseUpdate] = enhancedApi.usePutCaseSavecaseMutation();
     const onSubmitCaseUpdate: SubmitHandler<CaseDto> = async (caseDtoFormData) => {
         const updatedCase = mapCaseFormDataToDto(caseDto, caseDtoFormData);
         logObject("updated on submit case :", updatedCase);
-        triggerCaseUpdate({ body: updatedCase }).unwrap().then(() => {
+
+        triggerCaseUpdate({ body: updatedCase}).unwrap().then(() => {
             console.log("updated!");
         });
     };
 
     return (
-        <FormBox formHandler={handleSubmit(onSubmitCaseUpdate)}>
-            <TitleDivider title={"Case Information"}>
-                <Fab size="medium" color="primary" type="submit" sx={{marginLeft: "1rem"}} >
-                    <SaveIcon/>
-                </Fab>
-            </TitleDivider>
-            <div className={"ml-5 mt-5"}>
-                <Controller
-                    render={({ field }) => (
-                        <Select {...field}>
-                            <MenuItem value={EnsureUnion<ChamberNames>("Family")}>Family</MenuItem>
-                            <MenuItem value={EnsureUnion<ChamberNames>("Youth")}>Youth</MenuItem>
-                        </Select>
-                    )}
-                    name={"chamberName"}
-                    control={control}
-                    defaultValue={caseDto.chamberName}/>
-                <Typography fontSize={11}> Court Type </Typography>
-            </div>
-        </FormBox>
+        <>
+            <Container sx={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "1rem" }}>
+                <FormContainer submitHandler={handleSubmit(onSubmitCaseUpdate)}>
+                    <FormHeader title={"Activity Information"}>
+                        <SaveIconButton type={"submit"}/>
+                    </FormHeader>
+                    <FormBody>
+                        <Controller
+                            render={({ field }) => (
+                                <Select {...field}>
+                                    <MenuItem value={EnsureUnion<ChamberNames>("Family")}>Family</MenuItem>
+                                    <MenuItem value={EnsureUnion<ChamberNames>("Youth")}>Youth</MenuItem>
+                                </Select>
+                            )}
+                            name={"chamberName"}
+                            control={control}
+                            defaultValue={caseDto.chamberName}/>
+                        <Button type={"submit"}></Button>
+                    </FormBody>
+                </FormContainer>
+            </Container>
+        </>
+
     );
 }
 

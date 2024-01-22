@@ -1,11 +1,11 @@
 "use client";
 import { useClientDtoSearchParam, } from "./infpoage-hooks";
-import { DumbSuspenseCondition } from "../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import ClientForm from "@/app/homePage/clients/clientpage/infopage/_components/ClientForm";
 import CasesNavList from "@/app/homePage/clients/clientpage/infopage/_components/CasesNavList";
-import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
+import useStoreUserFromLocalStorage from "@/Hooks/useGetCasesLocal";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { DumbSuspenseCondition } from "@/Components/DumbGetCasesSusense";
 
 // https://www.svgrepo.com/svg/522262/save-floppy
 
@@ -17,12 +17,14 @@ export default function InfoPage() {
     return (
         <DumbSuspenseCondition condition={data.isSuccess && !data.isFetching && !!clientDto}>
             {clientDto && (
-                <Container sx={{ width: "100vw" }}>
+                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <ClientForm clientDto={clientDto!}/>
                     <CasesNavList clientDto={clientDto!}/>
-                </Container>
+                </Box>
+
             )}
         </DumbSuspenseCondition>
+
     );
 }
 

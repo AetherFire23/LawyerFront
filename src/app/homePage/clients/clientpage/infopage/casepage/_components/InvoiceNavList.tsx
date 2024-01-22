@@ -1,14 +1,10 @@
-import { InvoiceDto, } from "../../../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { Container, Divider, Paper, Typography } from "@mui/material";
-import Invoice from "@/app/homePage/clients/clientpage/infopage/casepage/_components/InvoiceNavCard";
-import InvoiceNavCard from "@/app/homePage/clients/clientpage/infopage/casepage/_components/InvoiceNavCard";
-import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { Container, Paper } from "@mui/material";
 import CreateInvoiceButton from "@/app/homePage/clients/clientpage/infopage/casepage/_components/CreateInvoiceButton";
-import { isValidArray } from "../../../../../../../../LogicFiles/TypeScriptExtensions/ArrayExtensions";
-import InsetList from "../../../../../../../../LogicFiles/Components/BasicListTest";
-import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
-import BasicAddFab from "../../../../../../../../LogicFiles/Components/BasicAddFab";
-import TitleDivider from "../../../../../../../../LogicFiles/Components/TitleDivider";
+import { InvoiceDto } from "@/Redux/codegen/userApi2Gen";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { useNavigations } from "@/Hooks/Navigations";
+import TitleDivider from "@/Components/TitleDivider";
+import InsetList from "@/Components/BasicListTest";
 
 export default function InvoiceNavList({ invoices, caseId }: {
     invoices: InvoiceDto[] | undefined | null,

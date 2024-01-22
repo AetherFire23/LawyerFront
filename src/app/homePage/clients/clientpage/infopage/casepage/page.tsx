@@ -1,11 +1,11 @@
 "use client";
 
 import { Container } from "@mui/material";
-import { DumbSuspenseCondition } from "../../../../../../../LogicFiles/Components/DumbGetCasesSusense";
 import { useCaseDtoFromParam } from "@/app/homePage/clients/clientpage/infopage/casepage/casePage-hooks";
 import InvoiceNavList from "@/app/homePage/clients/clientpage/infopage/casepage/_components/InvoiceNavList";
 import CaseForm from "@/app/homePage/clients/clientpage/infopage/casepage/_components/CaseForm";
-import { enhancedApi } from "../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { DumbSuspenseCondition } from "@/Components/DumbGetCasesSusense";
 
 export default function CasePage() {
     const caseDto = useCaseDtoFromParam();

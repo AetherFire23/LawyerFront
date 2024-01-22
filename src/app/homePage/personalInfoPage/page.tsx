@@ -1,36 +1,28 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { produce } from "immer";
-import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
+import { Box, Divider, Fab, Paper, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import {
-    LawyerDto,
-} from "../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import { useAppSelector } from "../../../../LogicFiles/Redux/hooks";
 import { mapFormDataToLawyerDto } from "@/app/homePage/personalInfoPage/personal-info-hooks";
 import { useFormReset } from "@/app/homePage/clients/clientpage/infopage/infpoage-hooks";
-import {  DumbSuspenseCondition } from "../../../../LogicFiles/Components/DumbGetCasesSusense";
-import useStoreUserFromLocalStorage from "../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { enhancedApi } from "../../../../LogicFiles/Redux/codegen/enhancedApi";
+import useStoreUserFromLocalStorage from "@/Hooks/useGetCasesLocal";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { DumbSuspenseCondition } from "@/Components/DumbGetCasesSusense";
+import { useAppSelector } from "@/Redux/hooks";
+import { LawyerDto } from "@/Redux/codegen/userApi2Gen";
+import * as React from "react";
+import { FormBody, FormContainer, FormField, FormHeader } from "@/Components/GenericForms/FormBody";
+import AddIcon from "@mui/icons-material/Add";
+import { AddIconButton, SaveIconButton } from "@/Components/Icons/Icons";
 
 export default function PersonalInfoPage() {
     useStoreUserFromLocalStorage();
-    const{isSuccess} = enhancedApi.useGetCaseGetcasescontextQuery()
+    const { isSuccess } = enhancedApi.useGetCaseGetcasescontextQuery();
     return (
         <DumbSuspenseCondition condition={isSuccess}>
-            <Container>
-                <Box>
-                    <Stack direction="column">
-                        <Typography> Lawyer information </Typography>
-                        <PersonalInfoForm/>
-                    </Stack>
-                </Box>
-            </Container>
+            <PersonalInfoForm/>
         </DumbSuspenseCondition>
     );
 }
@@ -38,51 +30,37 @@ export default function PersonalInfoPage() {
 // is there any way I can ensure this doesnt get rendered or run ?
 function PersonalInfoForm() {
     const lawyer = useAppSelector(c => c.caseSlice.lawyer) as LawyerDto;
-    const [triggerSave, data] = enhancedApi.usePutCaseUpdatelawyerMutation();
+    const [triggerSave] = enhancedApi.usePutCaseUpdatelawyerMutation();
     const { isSuccess } = enhancedApi.useGetCaseGetcasescontextQuery();
-
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<LawyerDto>({ defaultValues: lawyer });
-
+    const { register, handleSubmit, reset } = useForm<LawyerDto>({ defaultValues: lawyer });
     useFormReset(isSuccess, lawyer, reset);
 
     const onSubmit: SubmitHandler<LawyerDto> = async (lawyerForm) => {
         const updatedLawyer = mapFormDataToLawyerDto(lawyer!, lawyerForm);
-        console.log(updatedLawyer);
-
         triggerSave({ body: updatedLawyer });
-        // lets try to manual refetch just to see if automated refetching simply just sucks ass
     };
 
+    // The lesson I think is that the bigger container will adapt to the sice of the smaller container if is it marked as flex
+    // which is required in order to alignItems: "center"
+    // so setting 100% of parent in the CHILD will mean 100% of the parent.... that is adapting to he child
+    // so in the final we are just adapting to the items...
     return (
-        <Stack>
-            <form autoComplete={"new-password"}
-                className="p-5 card flex flex-col items-center items justify-start bg-neutral"
-                  onSubmit={handleSubmit(onSubmit)}>
 
-                <TextField
-                    autoComplete={"off"}
-                    id="standard-basic" label="email" variant="standard"
-                    className="input mb-5 input-bordered"
-                    {...register("email", {})} />
-
-                <TextField id="standard-basic" label="address" variant="standard"
-                           className="input mb-5 input-bordered"
-                           {...register("address", {})} />
-
-                <TextField id="standard-basic" label="first name" variant="standard"
-                           className="input mb-5 input-bordered"
-                           {...register("firstName", {})} />
-
-                <TextField id="standard-basic" label="last name" variant="standard"
-                           className="input mb-5 input-bordered"
-                           {...register("lastName", {})} />
-
-                <TextField id="standard-basic" label="mobile number" variant="standard"
-                           className="input mb-5 input-bordered"
-                           {...register("mobilePhoneNumber", {})} />
-
-                <Button type="submit"> Save </Button>
-            </form>
-        </Stack>
+        <Box className="flex flex-col items-center mt-4">
+            <Box sx={{width: "50vw"}} id={"form-box"}>
+                    <FormContainer submitHandler={handleSubmit(onSubmit)}>
+                        <FormHeader title={"Personal Information"}>
+                            <SaveIconButton type={"submit"}/>
+                        </FormHeader>
+                        <FormBody>
+                            <FormField text={"firstName"} register={register("firstName")}/>
+                            <FormField text={"lastName"} register={register("lastName")}/>
+                            <FormField text={"email"} register={register("email")}/>
+                            <FormField text={"mobilephone"} register={register("mobilePhoneNumber")}/>
+                            <Button type={"submit"}></Button>
+                        </FormBody>
+                    </FormContainer>
+            </Box>
+        </Box>
     );
 }

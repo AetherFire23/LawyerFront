@@ -1,9 +1,9 @@
 "use client";
-import useStoreUserFromLocalStorage from "../../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { useAppSelector } from "../../../../../LogicFiles/Redux/hooks";
+import useStoreUserFromLocalStorage from "@/Hooks/useGetCasesLocal";
 import ClientList from "@/app/homePage/clients/findclient/_components/ClientList";
-import { DumbSuspenseCondition } from "../../../../../LogicFiles/Components/DumbGetCasesSusense";
-import { enhancedApi } from "../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { useAppSelector } from "@/Redux/hooks";
+import { DumbSuspenseCondition } from "@/Components/DumbGetCasesSusense";
 
 export default function FindClientPage() {
     useStoreUserFromLocalStorage();

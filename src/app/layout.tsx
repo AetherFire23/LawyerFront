@@ -1,8 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Providers from "@/Redux/Providers";
+import ThemeRegistry from "@/MUIStuff/ThemeRegistry";
 
-import ThemeRegistry from "../../LogicFiles/MUIStuff/ThemeRegistry";
-import Providers from "../../LogicFiles/Redux/Providers";
+import DateTimeProvider from "@/Components/DateTimeProvider";
+
 
 export const metadata: Metadata = {
     title: "LawyerApp :)",
@@ -15,18 +17,17 @@ export default function RootLayout({
 
     return (
         <html lang="en">
-            <body>
-                <div>
-                    {/* tjrs use /rem ou viewport pour que ca scale mieux in and out */}
-                    {/* <Box sx={{ backgroundColor: 'black', width: '100vw', height: '100vh' }}>. */}
-                    <ThemeRegistry>
-                        <Providers>
-                                {children}
-                        </Providers>
-                    </ThemeRegistry>
-                    {/* </Box> */}
-                </div>
-            </body>
+        <body>
+        <div>
+            <DateTimeProvider>
+                <ThemeRegistry>
+                    <Providers>
+                        {children}
+                    </Providers>
+                </ThemeRegistry>
+            </DateTimeProvider>
+        </div>
+        </body>
         </html>
     );
 }

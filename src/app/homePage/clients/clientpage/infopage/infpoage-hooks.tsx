@@ -2,10 +2,10 @@ import { produce } from "immer";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, UseFormReset } from "react-hook-form";
-import { ClientDto } from "../../../../../../LogicFiles/Redux/codegen/userApi2Gen";
-import useStoreUserFromLocalStorage from "../../../../../../LogicFiles/Hooks/useGetCasesLocal";
-import { useAppSelector } from "../../../../../../LogicFiles/Redux/hooks";
-import { enhancedApi } from "../../../../../../LogicFiles/Redux/codegen/enhancedApi";
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import useStoreUserFromLocalStorage from "@/Hooks/useGetCasesLocal";
+import { useAppSelector } from "@/Redux/hooks";
+import { ClientDto } from "@/Redux/codegen/userApi2Gen";
 // use absolute paths from nextjs from ROOT
 // one day : https://nextjs.org/docs/app/building-your-application/configuring/absolute-imports-and-module-aliases
 export function useCaseIdSearchParam() {
@@ -50,10 +50,10 @@ export function mapFormDataToClientDto(clientDto: ClientDto, formData: ClientDto
 /** Used when the default form value must be overriden when a condition is met
  * ie: when refetching data
  */
-export function useFormReset<T extends FieldValues>(mustReset: boolean, obj: T, reset: UseFormReset<T>) {
+export function useFormReset<T extends FieldValues>(mustReset: boolean, defaultValue: T, reset: UseFormReset<T>) {
     const [isInitialized, setIsInitialized] = useState(false)
     if (mustReset && !isInitialized) {
-        reset(obj)
+        reset(defaultValue)
         setIsInitialized(true)
     }
 }

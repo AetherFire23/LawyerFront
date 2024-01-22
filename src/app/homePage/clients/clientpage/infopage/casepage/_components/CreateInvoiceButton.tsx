@@ -1,8 +1,7 @@
-import { useNavigations } from "../../../../../../../../LogicFiles/Hooks/Navigations";
-import { Button, SxProps, Theme } from "@mui/material";
-import { enhancedApi } from "../../../../../../../../LogicFiles/Redux/codegen/enhancedApi";
-import BasicAddFab from "../../../../../../../../LogicFiles/Components/BasicAddFab";
-
+import { enhancedApi } from "@/Redux/codegen/enhancedApi";
+import { SxProps, Theme } from "@mui/material";
+import { useNavigations } from "@/Hooks/Navigations";
+import BasicAddFab from "@/Components/BasicAddFab";
 
 interface CreateInvoiceButtonProps{
     caseId: string,
